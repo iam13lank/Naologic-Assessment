@@ -5,12 +5,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { WorkOrderDocument, WorkOrderStatus } from '../../models/work-order.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { NgSelectModule } from '@ng-select/ng-select'
 
 @Component({
   selector: 'app-work-order-form-panel',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgbDatepickerModule],
+  imports: [CommonModule, ReactiveFormsModule, NgbDatepickerModule, NgSelectModule],
   templateUrl: './work-order-form-panel.component.html',
   styleUrls: ['./work-order-form-panel.component.scss']
 })

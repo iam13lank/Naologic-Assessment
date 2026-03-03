@@ -9,11 +9,12 @@
       <label for="name">Work Order Name:</label>
       <input id="name" formControlName="name" type="text" required>
     </div>
-    <div class = "form-group">
-      <label for="status">Status:</label>
-      <select formControlName="status">
-        <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
-      </select>
+    <div class="form-group">
+      <ng-select
+        formControlName="status"
+        [items]="statusOptions"
+        placeholder="Status:">
+      </ng-select>
     </div>
    <div class="form-group">
       <label for="start">Start Time:</label>
