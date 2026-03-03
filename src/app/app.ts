@@ -1,12 +1,20 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { TimelineComponent } from './components/timeline/timeline.component';
+import { WorkCenterBarComponent } from './components/work-center-bar/work-center-bar.component';
+import { WorkOrderFormPanelComponent } from './components/work-order-form-panel/work-order-form-panel.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [CommonModule, TimelineComponent, WorkCenterBarComponent, WorkOrderFormPanelComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('Naologic-Assessment');
+  timescale: 'day' | 'week' | 'month' = 'day';
+
+  onTimescaleChange(newTimescale: 'day' | 'week' | 'month') {
+    this.timescale = newTimescale;
+  }
+  
 }

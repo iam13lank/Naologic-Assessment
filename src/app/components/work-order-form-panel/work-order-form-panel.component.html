@@ -1,0 +1,27 @@
+<div class ="panel"> 
+  <div class = "panel-header">
+    <h2>Work Order Details</h2>
+    <button class = "close-button" (click)="close()">Cancel</button>
+    <button class = "create-button" (click)="submit()">Create</button> <!-- This will eventually be a "Save" button when editing existing orders -->
+  </div>  
+  <form  [formGroup]="form" class = "panel-body">
+    <div class = "form-group">
+      <label for="name">Work Order Name:</label>
+      <input id="name" formControlName="name" type="text" required>
+    </div>
+    <div class = "form-group">
+      <label for="status">Status:</label>
+      <select formControlName="status">
+        <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+      </select>
+    </div>
+    <div class = "form-group">
+      <label for="start">Start Time:</label>
+      <input id="start" formControlName="start" type="datetime-local" required>
+    </div>
+    <div class = "form-group">
+      <label for="end">End Time:</label>
+      <input id="end" formControlName="end" type="datetime-local" required>
+    </div>
+  </form>
+</div>
