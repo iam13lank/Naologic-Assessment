@@ -12,8 +12,6 @@ import { WorkOrderDocument } from '../../models/work-order.model';
   styleUrls: ['./timeline.component.scss']
 })
 export class TimelineComponent implements OnChanges {
-
-
     @Input() timescale: 'day' | 'week' | 'month' = 'day';
     visibleCells: { date: Date; label: string }[] = [];
     workCenters: any;

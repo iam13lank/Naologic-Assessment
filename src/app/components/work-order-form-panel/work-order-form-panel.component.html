@@ -15,13 +15,26 @@
         <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
       </select>
     </div>
-    <div class = "form-group">
+   <div class="form-group">
       <label for="start">Start Time:</label>
-      <input id="start" formControlName="start" type="date" required>
+      <input
+        id="start"
+        class="form-control"
+        ngbDatepicker
+        formControlName="start"
+        #startDp="ngbDatepicker"
+        (click)="startDp.toggle()">
     </div>
-    <div class = "form-group">
+
+    <div class="form-group">
       <label for="end">End Time:</label>
-      <input id="end" formControlName="end" type="date" required>
+      <input
+        id="end"
+        class="form-control"
+        ngbDatepicker
+        formControlName="end"
+        #endDp="ngbDatepicker"
+        (click)="endDp.toggle()">
     </div>
   </form>
 </div>

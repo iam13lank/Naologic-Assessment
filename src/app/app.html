@@ -1,13 +1,17 @@
 <div class =  "Page-header">
   <h1>Work Orders</h1>
-  <div class = "timescale-zoom-controls">
-    <label>Timescale:</label>
-    <select [(ngModel)]="timescale" (change)="onTimescaleChange(timescale)">
-      <option value="day">Day</option>
-      <option value="week">Week</option>
-      <option value="month">Month</option>
-    </select>
-  </div>
+  <div class="timescale-zoom-controls">
+  <ng-select
+    [items]="['day', 'week', 'month']"
+    [(ngModel)]="timescale"
+    (change)="onTimescaleChange(timescale)"
+    bindLabel=""
+    placeholder="TimeScale: "
+    class="timescale-select"
+  >
+  </ng-select>
+</div>
+
 </div>
 
 <div class = "Main-content">  

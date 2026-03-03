@@ -4,11 +4,13 @@ import { WorkOrderService } from '../../services/work-order.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { WorkOrderDocument, WorkOrderStatus } from '../../models/work-order.model';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-work-order-form-panel',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgbDatepickerModule],
   templateUrl: './work-order-form-panel.component.html',
   styleUrls: ['./work-order-form-panel.component.scss']
 })
@@ -23,18 +25,22 @@ export class WorkOrderFormPanelComponent {
 
   constructor(private workOrderService: WorkOrderService) {}
 
-  ngOnInit() {
+ ngOnInit() {
     this.form = new FormGroup({
       name: new FormControl('Acme Inc.'),
       status: new FormControl('blocked'),
-      start: new FormControl(this.formatDate(this.today)),
-      end: new FormControl(this.formatDate(this.nextMonth))
+      start: new FormControl(this.toStruct(this.today)),
+      end: new FormControl(this.toStruct(this.nextMonth))
     });
   }
-  private formatDate(d: Date): string {
-    return d.toISOString().slice(0, 10);
-  }
 
+  private toStruct(d: Date) {
+    return {
+      year: d.getFullYear(),
+      month: d.getMonth() + 1,
+      day: d.getDate()
+    };
+  }
   submit() {
     console.log(this.form.value);
   }
