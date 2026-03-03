@@ -1,0 +1,27 @@
+<div class="timeline-container">
+  <div class="timeline-body">
+    <div class="timeline-row header-row">
+        <div><h3>Work Center</h3></div>
+        <div class="cell" *ngFor="let cell of visibleCells">
+            {{ cell.label }}
+        </div>
+    </div>
+    <div class="timeline-row" *ngFor="let wc of workCenters"> 
+        <div class="work-centers">
+            <ul>
+                <li>{{ wc.data.name }}</li>
+            </ul>
+        </div>
+        <div class="cell" *ngFor="let cell of visibleCells"></div>
+        <div
+            class="workorder-bar"
+            *ngFor="let order of getWorkorderByCenterId(wc.id)"
+            [ngStyle]="getBarStyle(order)"
+        >
+            {{ order.data.name }}
+        </div>
+    </div>
+  </div>
+</div>
+
+
