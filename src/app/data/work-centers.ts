@@ -1,0 +1,29 @@
+import { WorkCenterDocument } from '../models/work-center.model';
+
+export const WORK_CENTERS: WorkCenterDocument[] = [
+  {
+    docId: 'wc-1',
+    docType: 'workCenter',
+    data: { name: 'Extrusion Line A' }
+  },
+  {
+    docId: 'wc-2',
+    docType: 'workCenter',
+    data: { name: 'CNC Machine 1' }
+  },
+  {
+    docId: 'wc-3',
+    docType: 'workCenter',
+    data: { name: 'Assembly Station' }
+  },
+  {
+    docId: 'wc-4',
+    docType: 'workCenter',
+    data: { name: 'Quality Control' }
+  },
+  {
+    docId: 'wc-5',
+    docType: 'workCenter',
+    data: { name: 'Packaging Line' }
+  }
+];
