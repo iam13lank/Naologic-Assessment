@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, HostListener } from '@angular/core';
 import { WorkOrderService } from '../../services/work-order.service';
 import { WorkCenterService } from '../../services/work-center.service';
 import { WorkOrderDocument } from '../../models/work-order.model';
@@ -12,7 +12,19 @@ import { WorkOrderDocument } from '../../models/work-order.model';
   styleUrls: ['./timeline.component.scss']
 })
 export class TimelineComponent implements OnChanges {
+
+    menuState: Record<string, boolean> = {};
+    toggleMenu(id: string) {
+      this.menuState[id] = !this.menuState[id];
+    }
+
     
+    @HostListener('document:click')
+    closeMenus() {
+      this.menuState = {};
+    }
+
+
     @Input() timescale: 'day' | 'week' | 'month' = 'day';
     @Output() createAtDate = new EventEmitter<{ date: Date; workCenterId: string | null }>();
     @Output() editOrder = new EventEmitter<WorkOrderDocument>();
@@ -139,7 +151,8 @@ export class TimelineComponent implements OnChanges {
       return {
         left: `${startIndex * cellWidth}px`,
         width: `${(endIndex - startIndex + 1) * cellWidth}px`,
-        background: this.getStatusColor(order.data.status)
+        backgroundColor: this.getStatusBackground(order.data.status),
+        color: this.getStatusColor(order.data.status)
       };
     }
 
@@ -180,9 +193,6 @@ export class TimelineComponent implements OnChanges {
 
       return -1;
     }
-
-
-
     getCellWidth() {
       if (this.timescale === 'day') return 180;
       if (this.timescale === 'week') return 200;
@@ -191,15 +201,61 @@ export class TimelineComponent implements OnChanges {
     }
     getStatusColor(status: string) {
       switch (status) {
-        case 'open': return '#4a90e2';
-        case 'in-progress': return '#007bff';
-        case 'complete': return '#2ecc71';
-        case 'blocked': return '#e67e22';
-        default: return '#888';
+        case 'open': return 'rgba(0, 176, 191, 1)';
+        case 'in-progress': return 'rgba(62, 64, 219, 1)';
+        case 'complete': return 'rgba(8, 162, 104, 1)';
+        case 'blocked': return 'rgba(177, 54, 0, 1)';
+        default: return 'rgba(136, 136, 136, 1)';
       }
     }
+    getStatusBackground(status: string) {
+      switch (status) {
+        case 'open': return 'rgba(228, 253, 255, 1)';
+        case 'in-progress': return 'rgba(214, 216, 255, 1)';
+        case 'complete': return 'rgba(225, 255, 204, 1)';
+        case 'blocked': return 'rgba(252, 238, 181, 1)';
+        default: return 'rgba(136, 136, 136, 1)';
+      }
+    }
+
     getWorkorderByCenterId(centerId: string) {
         return this.workOrderService.getAll().filter((wo) => wo.data.workCenterId === centerId); 
     }
+    deleteOrder(order: WorkOrderDocument) {
+     this.workOrderService.delete(order.docId);
+    }
+    getCurrentMonthStyle() {
+      const range = this.getCurrentMonthRange();
+      if (!range) return {};
+
+      const cellWidth = this.getCellWidth();
+      
+      return {
+        left: `${range.firstIndex * cellWidth}px`,
+        width: `${(range.lastIndex - range.firstIndex + 1) * cellWidth}px`
+      };
+    }
+    getCurrentMonthRange() {
+      const now = new Date();
+      const month = now.getMonth();
+      const year = now.getFullYear();
+
+      const firstIndex = this.visibleCells.findIndex(c =>
+        c.date.getMonth() === month && c.date.getFullYear() === year
+      );
+
+      const lastIndex = [...this.visibleCells]
+        .reverse()
+        .findIndex(c =>
+          c.date.getMonth() === month && c.date.getFullYear() === year
+        );
+
+      if (firstIndex === -1 || lastIndex === -1) return null;
+
+      const realLastIndex = this.visibleCells.length - 1 - lastIndex;
+
+      return { firstIndex, lastIndex: realLastIndex };
+    }
+
 
 }

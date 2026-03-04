@@ -1,6 +1,9 @@
 <div class="timeline-container" [style.--cell-width.px]="getCellWidth()">
   <div class="timeline-header">
     <div class="cell" *ngFor="let cell of visibleCells">{{ cell.label }}</div>
+    <div class="current-month-pill" [ngStyle]="getCurrentMonthStyle()">
+      Current month
+    </div>
   </div>
 
   <div class="timeline-body">
@@ -16,12 +19,35 @@
 
       <div
         class="workorder-bar"
+        [ngClass]="order.data.status"
         *ngFor="let order of getWorkorderByCenterId(wc.docId)"
         [ngStyle]="getBarStyle(order)"
-        (click)="onBarClick(order)"
       >
-        {{ order.data.name }}
+        <div class="bar-content">
+          <span class="bar-title">{{ order.data.name }}</span>
+
+          <span class="status-pill" [class]="order.data.status">
+            {{ order.data.status }}
+          </span>
+
+          <div class="menu-wrapper" (click)="$event.stopPropagation()">
+            <button
+              class="menu-button"
+              (click)="toggleMenu(order.docId)"
+            >
+              &#8230;
+            </button>
+
+            <div class="menu-dropdown" *ngIf="menuState[order.docId]">
+              <div class="menu-item" (click)="onBarClick(order)">Edit</div>
+              <div class="menu-item delete" (click)="deleteOrder(order)">Delete</div>
+            </div>
+          </div>
+        </div>
       </div>
+
+
+
 
     </div>
   </div>

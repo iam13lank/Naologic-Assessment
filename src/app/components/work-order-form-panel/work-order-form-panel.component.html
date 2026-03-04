@@ -31,13 +31,26 @@
       <div class="form-group">
         <label for="status">Status</label>
         <ng-select
-          id="status"
           formControlName="status"
           [items]="statusOptions"
-          placeholder="Select status"
           class="status-select"
+          bindLabel=""
+          bindValue=""
         >
+
+          <!-- Selected value (colored pill) -->
+          <ng-template ng-label-tmp let-item="item">
+            <span class="status-pill" [class]="item">{{ item }}</span>
+          </ng-template>
+
+          <!-- Dropdown options (plain text) -->
+          <ng-template ng-option-tmp let-item="item">
+            <span class="status-option">{{ item }}</span>
+          </ng-template>
+
         </ng-select>
+
+
       </div>
 
       <div class="form-row">

@@ -1,3 +1,4 @@
+
 .Main-content {
   display: flex;
   flex-direction: row;
@@ -8,7 +9,7 @@
 app-work-center-bar {
   width: 240px;        /* fixed width */
   border-right: 1px solid #ddd;
-  background: #f7f7f7;
+  background: rgba(255, 255, 255, 1);
   box-sizing: border-box;
 }
 
