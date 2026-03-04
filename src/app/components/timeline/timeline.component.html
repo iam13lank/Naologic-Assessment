@@ -16,7 +16,7 @@
 
       <div
         class="workorder-bar"
-        *ngFor="let order of getWorkorderByCenterId(wc.data.workCenterId)"
+        *ngFor="let order of getWorkorderByCenterId(wc.docId)"
         [ngStyle]="getBarStyle(order)"
         (click)="onBarClick(order)"
       >
