@@ -1,0 +1,65 @@
+/* Wrapper that slides in/out */
+
+.panel-wrapper {
+  width: 0;
+  position: fixed;
+  top: 0;
+  right: -420px; /* hidden */
+  width: 420px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: -2px 0 6px rgba(0,0,0,0.15);
+  transition: right 0.3s ease;
+  z-index: 50;
+}
+
+.panel-wrapper.open {
+  right: 0; /* slide in */
+  width: 420px;
+}
+
+/* Panel content */
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.panel-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+input,
+ng-select {
+  width: 100%;
+}
+
+.close-button,
+.create-button {
+  padding: 6px 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.close-button {
+  background: #ccc;
+}
+
+.create-button {
+  background: #4a90e2;
+  color: white;
+}

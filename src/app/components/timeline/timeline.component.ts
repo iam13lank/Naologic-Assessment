@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { WorkOrderService } from '../../services/work-order.service';
 import { WorkCenterService } from '../../services/work-center.service';
 import { WorkOrderDocument } from '../../models/work-order.model';
@@ -12,7 +12,11 @@ import { WorkOrderDocument } from '../../models/work-order.model';
   styleUrls: ['./timeline.component.scss']
 })
 export class TimelineComponent implements OnChanges {
+    
     @Input() timescale: 'day' | 'week' | 'month' = 'day';
+    @Output() createAtDate = new EventEmitter<Date>();
+    @Output() editOrder = new EventEmitter<WorkOrderDocument>();
+
     visibleCells: { date: Date; label: string }[] = [];
     workCenters: any;
     
@@ -25,6 +29,26 @@ export class TimelineComponent implements OnChanges {
     ngOnChanges() {
       this.visibleCells = this.calculateVisibleCells(this.timescale);
     }
+    hoveredCellIndex: number | null = null;
+    hoveredDate: Date | null = null;
+
+    onCellHover(cell: { date: Date }, index: number) {
+      this.hoveredCellIndex = index;
+      this.hoveredDate = cell.date;
+    }
+
+    onCellLeave() {
+      this.hoveredCellIndex = null;
+      this.hoveredDate = null;
+    }
+
+    onCellClick(cell: { date: Date }) {
+      this.createAtDate.emit(cell.date);
+    }
+    onBarClick(order: WorkOrderDocument) {
+      this.editOrder.emit(order);
+    }
+
     calculateVisibleCells(timescale: 'day' | 'week' | 'month') {
       const today = new Date();
 
@@ -94,6 +118,9 @@ export class TimelineComponent implements OnChanges {
       const start = new Date(order.data.startDate);
       const end = new Date(order.data.endDate);
 
+      start.setHours(0,0,0,0);
+      end.setHours(0,0,0,0);
+
       const startIndex = this.findCellIndex(start);
       const endIndex = this.findCellIndex(end);
 
@@ -101,25 +128,29 @@ export class TimelineComponent implements OnChanges {
 
       const cellWidth = this.getCellWidth();
 
-      const left = startIndex * cellWidth;
-      const width = (endIndex - startIndex + 1) * cellWidth;
-
       return {
-        left: left + 'px',
-        width: width + 'px',
+        left: `${startIndex * cellWidth}px`,
+        width: `${(endIndex - startIndex + 1) * cellWidth}px`,
         background: this.getStatusColor(order.data.status)
       };
     }
+
     findCellIndex(date: Date): number {
-      return this.visibleCells.findIndex((c: { date: { toDateString: () => string; }; }) =>
-        c.date.toDateString() === date.toDateString()
-      );
+      const target = new Date(date);
+      target.setHours(0, 0, 0, 0);
+
+      return this.visibleCells.findIndex(c => {
+        const d = new Date(c.date);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime() === target.getTime();
+      });
     }
 
+
     getCellWidth() {
-      if (this.timescale === 'day') return 60;
-      if (this.timescale === 'week') return 100;
-      if (this.timescale === 'month') return 160;
+      if (this.timescale === 'day') return 180;
+      if (this.timescale === 'week') return 200;
+      if (this.timescale === 'month') return 150;
       return 80;
     }
     getStatusColor(status: string) {

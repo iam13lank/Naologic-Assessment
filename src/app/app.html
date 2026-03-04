@@ -1,20 +1,28 @@
 <div class =  "Page-header">
   <h1>Work Orders</h1>
   <div class="timescale-zoom-controls">
-  <ng-select
-    [items]="['day', 'week', 'month']"
-    [(ngModel)]="timescale"
-    (change)="onTimescaleChange(timescale)"
-    bindLabel=""
-    placeholder="TimeScale: "
-    class="timescale-select"
-  >
-  </ng-select>
+    <ng-select
+      [items]="['day', 'week', 'month']"
+      [(ngModel)]="timescale"
+      (change)="onTimescaleChange(timescale)"
+      bindLabel=""
+      placeholder="TimeScale: "
+      class="timescale-select"
+    >
+    </ng-select>
+  </div>
 </div>
 
-</div>
+<div class="Main-content">  
 
-<div class = "Main-content">  
-  <app-timeline [timescale]="timescale"></app-timeline>
-  <app-work-order-form-panel></app-work-order-form-panel>
+  <app-work-center-bar></app-work-center-bar>
+
+  <app-timeline
+    [timescale]="timescale"
+    (createAtDate)="formPanel.openCreatePanel($event)"
+    (editOrder)="formPanel.openEditPanel($event)"
+  ></app-timeline>
+
+  <app-work-order-form-panel #formPanel></app-work-order-form-panel>
+
 </div>
