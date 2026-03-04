@@ -1,24 +1,22 @@
-/* Wrapper that slides in/out */
-
 .panel-wrapper {
-  width: 0;
   position: fixed;
   top: 0;
-  right: -420px; /* hidden */
-  width: 420px;
+  right: -591px;
+  width: 591px;
   height: 100%;
-  background: #ffffff;
-  box-shadow: -2px 0 6px rgba(0,0,0,0.15);
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 5px 15px 0 rgba(216, 220, 235, 1),
+  0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
+  0 4.5px 5px -1px rgba(216, 220, 235, 1);
   transition: right 0.3s ease;
+  //border-radius: 12px 0 0 12px;
   z-index: 50;
+  
+  &.open {
+    right: 0;
+  }
 }
 
-.panel-wrapper.open {
-  right: 0; /* slide in */
-  width: 420px;
-}
-
-/* Panel content */
 .panel {
   display: flex;
   flex-direction: column;
@@ -28,38 +26,139 @@
 .panel-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #ddd;
+  align-items: flex-start;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e2e2;
+  background: #fafafa;
+}
+
+.panel-title-block h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.panel-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #777;
+}
+
+.panel-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-secondary {
+  background: #f2f2f2;
+  color: #333;
+}
+
+.btn-primary {
+  background: #4a90e2;
+  color: #fff;
 }
 
 .panel-body {
-  padding: 16px;
+  padding: 16px 20px;
   overflow-y: auto;
   flex: 1;
 }
 
 .form-group {
   margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #444;
+  }
 }
 
-input,
-ng-select {
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-group.half {
+  flex: 1;
+}
+
+.text-input {
   width: 100%;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 13px;
 }
 
-.close-button,
-.create-button {
-  padding: 6px 12px;
-  border: none;
-  cursor: pointer;
+.status-select ::ng-deep .ng-select-container {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  min-height: 32px;
+  font-size: 13px;
+}
+/* Base input styling */
+.text-input,
+::ng-deep .ng-select-container {
+  height: 36px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 0 10px;
+  background: #fff;
+  display: flex;
+  align-items: center;
 }
 
-.close-button {
-  background: #ccc;
+/* Placeholder + selected text */
+::ng-deep .ng-select .ng-placeholder,
+::ng-deep .ng-select .ng-value {
+  font-size: 14px;
+  color: #444;
 }
 
-.create-button {
-  background: #4a90e2;
-  color: white;
+/* Arrow */
+::ng-deep .ng-select .ng-arrow-wrapper {
+  width: 18px;
+}
+
+/* Hover */
+::ng-deep .ng-select-container:hover {
+  border-color: #b5b5b5;
+}
+
+/* Dropdown panel */
+::ng-deep .ng-dropdown-panel {
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  background: #fff;
+}
+
+/* Dropdown items */
+::ng-deep .ng-dropdown-panel .ng-option {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+::ng-deep .ng-dropdown-panel .ng-option:hover {
+  background: #f0f6ff;
+}
+
+/* Selected option highlight */
+::ng-deep .ng-dropdown-panel .ng-option-selected {
+  background: #e8f1ff;
+  font-weight: 500;
 }

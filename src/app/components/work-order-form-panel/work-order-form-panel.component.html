@@ -1,42 +1,69 @@
 <div class="panel-wrapper" [class.open]="panelOpen">
-  <div class ="panel"> 
-    <div class = "panel-header">
-      <h2>Work Order Details</h2>
-      <button class = "close-button" (click)="close()">Cancel</button>
-      <button class = "create-button" (click)="submit()">Create</button> <!-- This will eventually be a "Save" button when editing existing orders -->
-    </div>  
-    <form  [formGroup]="form" class = "panel-body">
-      <div class = "form-group">
-        <label for="name">Work Order Name:</label>
-        <input id="name" formControlName="name" type="text" required>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title-block">
+        <h2>Work Order Details</h2>
+        <p class="panel-subtitle">
+          Specify the dates, name and status for this order.
+        </p>
       </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-secondary" (click)="close()">Cancel</button>
+        <button class="btn btn-primary" (click)="submit()">
+          {{ workOrderForm ? 'Save' : 'Create' }}
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="form" class="panel-body">
       <div class="form-group">
-        <ng-select
-          formControlName="status"
-          [items]="statusOptions"
-          placeholder="Status:">
-        </ng-select>
-      </div>
-    <div class="form-group">
-        <label for="start">Start Time:</label>
+        <label for="name">Work Order Name</label>
         <input
-          id="start"
-          class="form-control"
-          ngbDatepicker
-          formControlName="start"
-          #startDp="ngbDatepicker"
-          (click)="startDp.toggle()">
+          id="name"
+          formControlName="name"
+          type="text"
+          class="text-input"
+          placeholder="Enter work order name"
+        />
       </div>
 
       <div class="form-group">
-        <label for="end">End Time:</label>
-        <input
-          id="end"
-          class="form-control"
-          ngbDatepicker
-          formControlName="end"
-          #endDp="ngbDatepicker"
-          (click)="endDp.toggle()">
+        <label for="status">Status</label>
+        <ng-select
+          id="status"
+          formControlName="status"
+          [items]="statusOptions"
+          placeholder="Select status"
+          class="status-select"
+        >
+        </ng-select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="start">Start date</label>
+          <input
+            id="start"
+            class="text-input"
+            ngbDatepicker
+            formControlName="start"
+            #startDp="ngbDatepicker"
+            (click)="startDp.toggle()"
+          />
+        </div>
+
+        <div class="form-group half">
+          <label for="end">End date</label>
+          <input
+            id="end"
+            class="text-input"
+            ngbDatepicker
+            formControlName="end"
+            #endDp="ngbDatepicker"
+            (click)="endDp.toggle()"
+          />
+        </div>
       </div>
     </form>
   </div>
