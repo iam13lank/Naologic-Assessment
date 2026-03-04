@@ -25,7 +25,7 @@ export class WorkOrderFormPanelComponent implements OnInit {
 
   private today = new Date();
   private nextMonth = new Date(this.today.getFullYear(), this.today.getMonth() + 1, this.today.getDate());
-
+  private selectedWorkCenterId: string | null = null;
   constructor(private workOrderService: WorkOrderService) {}
 
   ngOnInit() {
@@ -53,20 +53,21 @@ export class WorkOrderFormPanelComponent implements OnInit {
   }
 
   /** OPEN PANEL FOR CREATE */
-  openCreatePanel(date: Date) {
+  openCreatePanel(event: { date: Date; workCenterId: string | null }) {
+    this.selectedWorkCenterId = event.workCenterId;
     this.workOrderForm = null;
     this.form.reset({
       name: 'Acme Inc.',
       status: 'open',
-      start: this.toStruct(date),
-      end: this.toStruct(new Date(date.getTime() + 30 * 24 * 60 * 60 * 1000)) // default to 30 day duration
+      start: this.toStruct(event.date),
+      end: this.toStruct(new Date(event.date.getTime() + 30 * 24 * 60 * 60 * 1000)) // default to 30 day duration
     });
     this.panelOpen = true;
   }
   /** OPEN PANEL FOR EDIT */
   openEditPanel(order: WorkOrderDocument) {
+    console.log('Editing order:', order);
     this.workOrderForm = order;
-
     this.form.setValue({
       name: order.data.name,
       status: order.data.status,
@@ -82,25 +83,28 @@ export class WorkOrderFormPanelComponent implements OnInit {
     this.panelOpen = false;
   }
 
-  /** SAVE / CREATE */
   submit() {
     const raw = this.form.value;
 
-    const payload = {
-      name: raw.name,
-      status: raw.status,
-      start: this.toDate(raw.start),
-      end: this.toDate(raw.end)
+    const payload: WorkOrderDocument = {
+      docId: this.workOrderForm?.docId ?? crypto.randomUUID(), // look at this later
+      docType: 'workOrder',
+      data: {
+        name: raw.name,
+        status: raw.status,
+        workCenterId: this.workOrderForm?.data.workCenterId ?? this.selectedWorkCenterId!,
+        startDate: this.toDate(raw.start).toISOString(),
+        endDate: this.toDate(raw.end).toISOString()
+      }
     };
 
     if (this.workOrderForm) {
-      console.log('Updating existing order:', payload);
-      // this.workOrderService.update(...)
+      this.workOrderService.update(payload);
     } else {
-      console.log('Creating new order:', payload);
-      // this.workOrderService.create(...)
+      this.workOrderService.create(payload);
     }
 
     this.panelOpen = false;
   }
+
 }

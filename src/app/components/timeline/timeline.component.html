@@ -5,14 +5,14 @@
 
   <div class="timeline-body">
     <div class="timeline-row" *ngFor="let wc of workCenters">
+
       <div 
-      class="cell"
-      *ngFor="let cell of visibleCells; let i = index"
-      (mouseenter)="onCellHover(cell, i)"
-      (mouseleave)="onCellLeave()"
-      (click)="onCellClick(cell)"
-      >
-      </div>
+        class="cell"
+        *ngFor="let cell of visibleCells; let i = index"
+        (mouseenter)="onCellHover(cell, i, wc)"
+        (mouseleave)="onCellLeave()"
+        (click)="onCellClick(cell, wc)"
+      ></div>
 
       <div
         class="workorder-bar"
@@ -22,6 +22,7 @@
       >
         {{ order.data.name }}
       </div>
+
     </div>
   </div>
 </div>

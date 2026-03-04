@@ -14,7 +14,7 @@ import { WorkOrderDocument } from '../../models/work-order.model';
 export class TimelineComponent implements OnChanges {
     
     @Input() timescale: 'day' | 'week' | 'month' = 'day';
-    @Output() createAtDate = new EventEmitter<Date>();
+    @Output() createAtDate = new EventEmitter<{ date: Date; workCenterId: string | null }>();
     @Output() editOrder = new EventEmitter<WorkOrderDocument>();
 
     visibleCells: { date: Date; label: string }[] = [];
@@ -28,13 +28,15 @@ export class TimelineComponent implements OnChanges {
     }
     ngOnChanges() {
       this.visibleCells = this.calculateVisibleCells(this.timescale);
+      
     }
     hoveredCellIndex: number | null = null;
     hoveredDate: Date | null = null;
-
-    onCellHover(cell: { date: Date }, index: number) {
+    selectedWorkCenterId: string | null = null;
+    onCellHover(cell: { date: Date }, index: number, wc: { docId: string }) {
       this.hoveredCellIndex = index;
       this.hoveredDate = cell.date;
+      this.selectedWorkCenterId = wc.docId;
     }
 
     onCellLeave() {
@@ -42,9 +44,14 @@ export class TimelineComponent implements OnChanges {
       this.hoveredDate = null;
     }
 
-    onCellClick(cell: { date: Date }) {
-      this.createAtDate.emit(cell.date);
+    onCellClick(cell: { date: any }, wc: { docId: any }) {
+      this.createAtDate.emit({
+        date: cell.date,
+        workCenterId: wc.docId
+      });
     }
+
+
     onBarClick(order: WorkOrderDocument) {
       this.editOrder.emit(order);
     }
@@ -115,6 +122,7 @@ export class TimelineComponent implements OnChanges {
       return Math.ceil((((d as any) - (yearStart as any)) / 86400000 + 1) / 7);
     }
     getBarStyle(order: WorkOrderDocument) {
+      
       const start = new Date(order.data.startDate);
       const end = new Date(order.data.endDate);
 
@@ -138,13 +146,41 @@ export class TimelineComponent implements OnChanges {
     findCellIndex(date: Date): number {
       const target = new Date(date);
       target.setHours(0, 0, 0, 0);
+      if (this.timescale === 'day') {
+        // exact day match
+        return this.visibleCells.findIndex(c => {
+          const d = new Date(c.date);
+          d.setHours(0, 0, 0, 0);
+          return d.getTime() === target.getTime();
+        });
+      }
 
-      return this.visibleCells.findIndex(c => {
-        const d = new Date(c.date);
-        d.setHours(0, 0, 0, 0);
-        return d.getTime() === target.getTime();
-      });
+      if (this.timescale === 'week') {
+        // match by week number + year
+        const targetWeek = this.getWeekNumber(target);
+        const targetYear = target.getFullYear();
+
+        return this.visibleCells.findIndex(c => {
+          const d = new Date(c.date);
+          const week = this.getWeekNumber(d);
+          return week === targetWeek && d.getFullYear() === targetYear;
+        });
+      }
+
+      if (this.timescale === 'month') {
+        // match by month + year
+        const targetMonth = target.getMonth();
+        const targetYear = target.getFullYear();
+
+        return this.visibleCells.findIndex(c => {
+          const d = new Date(c.date);
+          return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+        });
+      }
+
+      return -1;
     }
+
 
 
     getCellWidth() {
