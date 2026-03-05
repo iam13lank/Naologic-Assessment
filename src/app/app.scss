@@ -1,39 +1,50 @@
-
-.Main-content {
+/* ============================================
+   NAOLOGIC TOP BAR
+============================================ */
+.naologic-topbar {
+  height: 48px;
   display: flex;
-  flex-direction: row;
-  height: calc(100vh - 80px); /* adjust depending on header height */
-}
-
-/* Left sidebar */
-app-work-center-bar {
-  width: 240px;        /* fixed width */
-  border-right: 1px solid #ddd;
-  background: rgba(255, 255, 255, 1);
-  box-sizing: border-box;
-}
-
-/* Timeline takes the remaining space */
-app-timeline {
-  flex: 1;
-  border-right: 1px solid #ddd;
-  overflow: auto;
-}
-
-.layout {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.Page-header {
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
+  padding: 0 20px;
+}
+
+.naologic-logo {
+  height: 75px;      
+  width: auto;
+  display: block;
+}
+
+
+/* ============================================
+   PAGE HEADER
+============================================ */
+.Page-header {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 20px;
   border-bottom: 1px solid #ddd;
   background: #fff;
 }
 
+.Page-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: rgba(3, 9, 41, 1);
+  margin: 0;
+}
+
+/* ============================================
+   MAIN CONTENT LAYOUT
+============================================ */
+.Main-content {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 48px - 60px); /* topbar + header */
+}
+
+/* ============================================
+   TIMESCALE DROPDOWN
+============================================ */
 .timescale-zoom-controls {
   display: flex;
   align-items: center;
@@ -53,9 +64,10 @@ app-timeline {
   padding: 0 8px;
   display: flex;
   align-items: center;
+  font-family: "Circular-Std";
 }
 
-/* Placeholder text */
+/* Placeholder */
 ::ng-deep .timescale-select .ng-placeholder {
   color: #666;
   font-size: 14px;
@@ -66,7 +78,7 @@ app-timeline {
   width: 20px;
 }
 
-/* Hover effect */
+/* Hover */
 ::ng-deep .timescale-select .ng-select-container:hover {
   border-color: #999;
   background: #f0f0f0;
@@ -83,12 +95,9 @@ app-timeline {
 ::ng-deep .ng-dropdown-panel .ng-option {
   padding: 8px 12px;
   font-size: 14px;
+  text-transform: uppercase;
 }
 
 ::ng-deep .ng-dropdown-panel .ng-option:hover {
   background: #e6f2ff;
-}
-::ng-deep .timescale-select .ng-value,
-::ng-deep .timescale-select .ng-option {
-  text-transform: uppercase;
 }

@@ -10,6 +10,7 @@
 ============================================ */
 
 .timeline-container {
+  height: 100%;
   display: grid;
   grid-template-columns: 380px 1fr;
   grid-template-rows: 18px 1fr;
@@ -30,18 +31,16 @@
   top: 0;
   z-index: 90;
   background: white;
+  border-right: 1px solid #f0f0f0;
 }
 
 .work-center-column h3 {
   height: 18px;
   padding: 0 16px;
-  display: flex;
-  align-items: center;
-  margin: 0;
-  background: white;
-  border-bottom: 1px solid #e5e5e5;
+  color: rgba(104, 113, 150, 1);
+  font-weight: 500;
   font-size: 14px;
-  font-weight: 600;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .work-center-column ul {
@@ -69,6 +68,7 @@
 ============================================ */
 
 .timeline-scroll {
+  height: 100%;
   grid-column: 2;
   grid-row: 1 / span 2;
   overflow-x: auto;
@@ -92,16 +92,15 @@
 
 .timeline-header .cell {
   width: var(--cell-width, 120px);
-  height: 18px;
+  height: 32px;
   display: flex;
+  color:rgba(104, 113, 150, 1);
   align-items: center;
+  text-align: center;
   justify-content: center;
-
   border-bottom: 1px solid #eee;
-
-  font-size: 11px;
-  font-weight: 600;
-  background: #fafafa;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* ============================================
@@ -119,7 +118,6 @@
   grid-auto-flow: column;
   position: relative;
   height: 48px;
-  border-bottom: 1px solid #f0f0f0;
   box-sizing: border-box;
 }
 

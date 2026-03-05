@@ -1,18 +1,26 @@
-<div class =  "Page-header">
+<!-- NAOLOGIC TOP BAR -->
+<div class="naologic-topbar">
+  <img src="assets/naologic-logo.webp" alt="Naologic Logo" class="naologic-logo" />
+</div>
+
+
+<!-- PAGE HEADER -->
+<div class="Page-header">
   <h1>Work Orders</h1>
+
   <div class="timescale-zoom-controls">
     <ng-select
       [items]="['day', 'week', 'month']"
       [(ngModel)]="timescale"
       (change)="onTimescaleChange(timescale)"
       bindLabel=""
-      placeholder="TimeScale: "
+      placeholder="Timescale"
       class="timescale-select"
-    >
-    </ng-select>
+    ></ng-select>
   </div>
 </div>
 
+<!-- MAIN CONTENT -->
 <div class="Main-content">  
   <app-timeline
     [timescale]="timescale"
@@ -21,5 +29,4 @@
   ></app-timeline>
 
   <app-work-order-form-panel #formPanel></app-work-order-form-panel>
-
 </div>
