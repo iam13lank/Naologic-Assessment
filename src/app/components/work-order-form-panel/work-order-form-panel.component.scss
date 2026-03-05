@@ -1,29 +1,36 @@
-/* PANEL WRAPPER */
 .panel-wrapper {
   position: fixed;
+  inset: 0; /* full screen */
+  background: rgba(0,0,0,0.4); /* dim backdrop */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: 90;
+}
+
+.panel-wrapper.open {
+  opacity: 1;
+  pointer-events: auto; /* now it receives clicks */
+}
+
+.panel {
+  position: absolute;
   top: 0;
   right: -591px;
   width: 591px;
   height: 100%;
-  background-color: #fff;
+  background: #fff;
   box-shadow:
     0 5px 15px rgba(216, 220, 235, 1),
     0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
     0 4.5px 5px -1px rgba(216, 220, 235, 1);
   transition: right 0.3s ease;
-  z-index: 50;
-
-  &.open {
-    right: 0;
-  }
 }
 
-/* PANEL LAYOUT */
-.panel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.panel-wrapper.open .panel {
+  right: 0;
 }
+
 
 .panel-header {
   display: flex;
@@ -92,6 +99,7 @@
 .form-row {
   display: flex;
   gap: 12px;
+  flex-direction: column;
 }
 
 .form-group.half {
@@ -176,3 +184,4 @@
 .status-pill.in-progress { background: rgba(214, 216, 255, 1);  color: rgba(62, 64, 219, 1);}
 .status-pill.complete { background: rgba(225, 255, 204, 1);  color: rgba(8, 162, 104, 1); }
 .status-pill.blocked { background: rgba(252, 238, 181, 1); color: rgba(177, 54, 0, 1); }
+

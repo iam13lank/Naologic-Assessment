@@ -151,9 +151,10 @@ export class TimelineComponent implements OnChanges {
       return {
         left: `${startIndex * cellWidth}px`,
         width: `${(endIndex - startIndex + 1) * cellWidth}px`,
-        backgroundColor: this.getStatusBackground(order.data.status),
-        color: this.getStatusColor(order.data.status)
+        '--bar-bg': this.getStatusBackground(order.data.status),
+        '--bar-color': this.getStatusColor(order.data.status)
       };
+
     }
 
     findCellIndex(date: Date): number {

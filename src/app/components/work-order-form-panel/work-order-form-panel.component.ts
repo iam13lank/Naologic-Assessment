@@ -22,20 +22,30 @@ export class WorkOrderFormPanelComponent implements OnInit {
   statusOptions: WorkOrderStatus[] = ['open', 'in-progress', 'complete', 'blocked'];
 
   panelOpen = false;
+  todayPlaceholder = '';
+  nextWeekPlaceholder = '';
+
 
   private today = new Date();
-  private nextMonth = new Date(this.today.getFullYear(), this.today.getMonth() + 1, this.today.getDate());
   private selectedWorkCenterId: string | null = null;
   constructor(private workOrderService: WorkOrderService) {}
 
   ngOnInit() {
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+
+    this.todayPlaceholder = today.toISOString().split('T')[0];
+    this.nextWeekPlaceholder = nextWeek.toISOString().split('T')[0];
+
     this.form = new FormGroup({
       name: new FormControl(''),
       status: new FormControl('open'),
-      start: new FormControl(this.toStruct(this.today)),
-      end: new FormControl(this.toStruct(this.nextMonth))
+      start: new FormControl(this.toStruct(today)),
+      end: new FormControl(this.toStruct(nextWeek))
     });
   }
+
   
 
   /** Convert JS Date → NgbDateStruct */
@@ -57,10 +67,10 @@ export class WorkOrderFormPanelComponent implements OnInit {
     this.selectedWorkCenterId = event.workCenterId;
     this.workOrderForm = null;
     this.form.reset({
-      name: 'Acme Inc.',
+      name: '',
       status: 'open',
-      start: this.toStruct(event.date),
-      end: this.toStruct(new Date(event.date.getTime() + 30 * 24 * 60 * 60 * 1000)) // default to 30 day duration
+      start: '',
+      end: ''
     });
     this.panelOpen = true;
   }
@@ -85,7 +95,6 @@ export class WorkOrderFormPanelComponent implements OnInit {
 
   submit() {
     const raw = this.form.value;
-
     const payload: WorkOrderDocument = {
       docId: this.workOrderForm?.docId ?? crypto.randomUUID(), // look at this later
       docType: 'workOrder',

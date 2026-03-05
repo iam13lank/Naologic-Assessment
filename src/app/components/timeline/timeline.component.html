@@ -1,4 +1,15 @@
 <div class="timeline-container" [style.--cell-width.px]="getCellWidth()">
+  <div class = "work-center-column">
+    <h3>Work Center</h3>
+    <ul>
+      <li 
+        *ngFor="let center of workCenters"
+        [class.hovered]="selectedWorkCenterId === center.docId"
+      >
+        {{ center.data.name }}
+      </li>
+    </ul>
+  </div>
   <div class="timeline-header">
     <div class="cell" *ngFor="let cell of visibleCells">{{ cell.label }}</div>
     <div class="current-month-pill" [ngStyle]="getCurrentMonthStyle()">
@@ -8,7 +19,6 @@
 
   <div class="timeline-body">
     <div class="timeline-row" *ngFor="let wc of workCenters">
-
       <div 
         class="cell"
         *ngFor="let cell of visibleCells; let i = index"
@@ -45,10 +55,6 @@
           </div>
         </div>
       </div>
-
-
-
-
     </div>
   </div>
 </div>

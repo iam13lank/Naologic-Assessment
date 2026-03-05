@@ -1,5 +1,5 @@
-<div class="panel-wrapper" [class.open]="panelOpen">
-  <div class="panel">
+<div class="panel-wrapper" [class.open]="panelOpen"  (click)="close()">
+  <div class="panel"  (click)="$event.stopPropagation()">
     <div class="panel-header">
       <div class="panel-title-block">
         <h2>Work Order Details</h2>
@@ -24,7 +24,7 @@
           formControlName="name"
           type="text"
           class="text-input"
-          placeholder="Enter work order name"
+          placeholder="Acme Inc."
         />
       </div>
 
@@ -63,6 +63,7 @@
             formControlName="start"
             #startDp="ngbDatepicker"
             (click)="startDp.toggle()"
+            [placeholder]="todayPlaceholder"
           />
         </div>
 
@@ -75,6 +76,7 @@
             formControlName="end"
             #endDp="ngbDatepicker"
             (click)="endDp.toggle()"
+            [placeholder]="nextWeekPlaceholder"
           />
         </div>
       </div>
