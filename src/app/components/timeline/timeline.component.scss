@@ -11,7 +11,7 @@
 
 .timeline-container {
   display: grid;
-  grid-template-columns: 380px max-content;
+  grid-template-columns: 380px 1fr;
   grid-template-rows: 18px 1fr;
   width: 100%;
   position: relative;
@@ -65,12 +65,23 @@
 }
 
 /* ============================================
-   TIMELINE HEADER (18px)
+   SCROLLABLE TIMELINE AREA
+============================================ */
+
+.timeline-scroll {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  white-space: nowrap;
+}
+
+/* ============================================
+   TIMELINE HEADER
 ============================================ */
 
 .timeline-header {
-  grid-row: 1;
-  grid-column: 2;
   display: grid;
   grid-auto-flow: column;
   position: sticky;
@@ -86,9 +97,7 @@
   align-items: center;
   justify-content: center;
 
-  border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
-  border-right: none;
 
   font-size: 11px;
   font-weight: 600;
@@ -96,16 +105,13 @@
 }
 
 /* ============================================
-   TIMELINE BODY (48px rows)
+   TIMELINE BODY
 ============================================ */
 
 .timeline-body {
-  grid-row: 2;
-  grid-column: 2;
   display: grid;
   grid-auto-rows: 48px;
   position: relative;
-  overflow-x: visible;
 }
 
 .timeline-row {
@@ -133,9 +139,12 @@
 }
 
 .timeline-row .cell:hover {
-  background: #e9f3ff;
-}
+  border:1px solid rgba(195, 199, 255, 1);
+  border-radius: 8px;
 
+  background: rgba(101, 112, 255, 0.1);
+;
+}
 
 /* ============================================
    CURRENT MONTH PILL
@@ -143,9 +152,9 @@
 
 .current-month-pill {
   width: 80px !important;
+  margin-left: 36px;
   position: absolute;
   top: 20px;
-  margin-left: 36px;
   border-radius: 6px;
   padding: 4px 10px;
   background: rgba(214, 216, 255, 1);

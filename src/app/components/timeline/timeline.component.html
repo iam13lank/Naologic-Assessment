@@ -1,5 +1,7 @@
 <div class="timeline-container" [style.--cell-width.px]="getCellWidth()">
-  <div class = "work-center-column">
+
+  <!-- LEFT COLUMN -->
+  <div class="work-center-column">
     <h3>Work Center</h3>
     <ul>
       <li 
@@ -10,35 +12,46 @@
       </li>
     </ul>
   </div>
-  <div class="timeline-header">
-    <div class="cell" *ngFor="let cell of visibleCells">{{ cell.label }}</div>
-    <div class="current-month-pill" [ngStyle]="getCurrentMonthStyle()">
-      Current month
+
+  <!-- SCROLLABLE TIMELINE -->
+  <div class="timeline-scroll" #scrollContainer>
+
+    <!-- HEADER -->
+    <div class="timeline-header">
+      <div class="cell" *ngFor="let cell of visibleCells">
+        {{ cell.label }}
+      </div>
+
+      <div class="current-month-pill" [ngStyle]="getCurrentMonthStyle()">
+        Current month
+      </div>
     </div>
-  </div>
 
-  <div class="timeline-body">
-    <div class="timeline-row" *ngFor="let wc of workCenters">
-      <div 
-        class="cell"
-        *ngFor="let cell of visibleCells; let i = index"
-        (mouseenter)="onCellHover(cell, i, wc)"
-        (mouseleave)="onCellLeave()"
-        (click)="onCellClick(cell, wc)"
-      ></div>
+    <!-- BODY -->
+    <div class="timeline-body">
+      <div class="timeline-row" *ngFor="let wc of workCenters">
 
-      <app-work-order-bar
-        *ngFor="let order of getWorkorderByCenterId(wc.docId)"
-        [order]="order"
-        [visibleCells]="visibleCells"
-        [timescale]="timescale"
-        (edit)="onBarEdit(order)"
-        (delete)="onBarDelete(order)"
-      ></app-work-order-bar>
+        <!-- CELLS -->
+        <div 
+          class="cell"
+          *ngFor="let cell of visibleCells; let i = index"
+          (mouseenter)="onCellHover(cell, i, wc)"
+          (mouseleave)="onCellLeave()"
+          (click)="onCellClick(cell, wc)"
+        ></div>
 
+        <!-- WORK ORDER BARS -->
+        <app-work-order-bar
+          *ngFor="let order of getWorkorderByCenterId(wc.docId)"
+          [order]="order"
+          [visibleCells]="visibleCells"
+          [timescale]="timescale"
+          (edit)="onBarEdit(order)"
+          (delete)="onBarDelete(order)"
+        ></app-work-order-bar>
 
-
-
+      </div>
     </div>
+
   </div>
 </div>

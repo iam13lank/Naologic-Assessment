@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
 import { WorkOrderService } from '../../services/work-order.service';
 import { WorkCenterService } from '../../services/work-center.service';
 import { WorkOrderDocument } from '../../models/work-order.model';
@@ -36,9 +36,15 @@ export class TimelineComponent implements OnChanges {
     this.visibleCells = this.calculateVisibleCells(this.timescale);
   }
 
+  ngAfterViewInit() {
+    this.scrollToToday();
+  }
+
   ngOnChanges() {
     this.visibleCells = this.calculateVisibleCells(this.timescale);
+    setTimeout(() => this.scrollToToday(), 0);
   }
+
 
   // -------------------------------
   // CELL INTERACTION
@@ -202,4 +208,30 @@ export class TimelineComponent implements OnChanges {
 
     return { firstIndex, lastIndex: realLastIndex };
   }
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
+
+  getTodayIndex() {
+  const today = new Date();
+  return this.visibleCells.findIndex(c =>
+    c.date.getFullYear() === today.getFullYear() &&
+    c.date.getMonth() === today.getMonth() &&
+    c.date.getDate() === today.getDate()
+    );
+  }
+
+  scrollToToday() {
+    if (!this.scrollContainer) return;
+
+    const index = this.getTodayIndex();
+    if (index === -1) return;
+
+    const cellWidth = this.getCellWidth();
+    const scrollPos = index * cellWidth - (this.scrollContainer.nativeElement.clientWidth / 2) + (cellWidth / 2);
+
+    this.scrollContainer.nativeElement.scrollTo({
+      left: scrollPos,
+      behavior: 'smooth'
+    });
+  }
+
 }
