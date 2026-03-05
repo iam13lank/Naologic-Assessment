@@ -4,10 +4,9 @@ import { TimelineComponent } from './components/timeline/timeline.component';
 import { WorkOrderFormPanelComponent } from './components/work-order-form-panel/work-order-form-panel.component';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { WorkCenterBarComponent } from "./components/work-center-bar/work-center-bar.component";  
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, TimelineComponent, WorkOrderFormPanelComponent, FormsModule, NgSelectModule, WorkCenterBarComponent],
+  imports: [CommonModule, TimelineComponent, WorkOrderFormPanelComponent, FormsModule, NgSelectModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

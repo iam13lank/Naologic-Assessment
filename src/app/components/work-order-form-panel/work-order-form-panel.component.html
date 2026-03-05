@@ -1,5 +1,6 @@
-<div class="panel-wrapper" [class.open]="panelOpen"  (click)="close()">
-  <div class="panel"  (click)="$event.stopPropagation()">
+<div class="panel-wrapper" [class.open]="panelOpen" (click)="close()">
+  <div class="panel" (click)="$event.stopPropagation()">
+
     <div class="panel-header">
       <div class="panel-title-block">
         <h2>Work Order Details</h2>
@@ -17,6 +18,8 @@
     </div>
 
     <form [formGroup]="form" class="panel-body">
+
+      <!-- NAME -->
       <div class="form-group">
         <label for="name">Work Order Name</label>
         <input
@@ -26,10 +29,18 @@
           class="text-input"
           placeholder="Acme Inc."
         />
+
+        <!-- REQUIRED ERROR -->
+        <div *ngIf="form.get('name')?.touched && form.get('name')?.errors?.['required']"
+             class="error">
+          Work order name is required.
+        </div>
       </div>
 
+      <!-- STATUS -->
       <div class="form-group">
         <label for="status">Status</label>
+
         <ng-select
           formControlName="status"
           [items]="statusOptions"
@@ -37,23 +48,20 @@
           bindLabel=""
           bindValue=""
         >
-
-          <!-- Selected value (colored pill) -->
           <ng-template ng-label-tmp let-item="item">
             <span class="status-pill" [class]="item">{{ item }}</span>
           </ng-template>
 
-          <!-- Dropdown options (plain text) -->
           <ng-template ng-option-tmp let-item="item">
             <span class="status-option">{{ item }}</span>
           </ng-template>
-
         </ng-select>
-
-
       </div>
 
+      <!-- DATE ROW -->
       <div class="form-row">
+
+        <!-- START DATE -->
         <div class="form-group half">
           <label for="start">Start date</label>
           <input
@@ -67,6 +75,7 @@
           />
         </div>
 
+        <!-- END DATE -->
         <div class="form-group half">
           <label for="end">End date</label>
           <input
@@ -78,8 +87,15 @@
             (click)="endDp.toggle()"
             [placeholder]="nextWeekPlaceholder"
           />
+
+          <!-- OVERLAP ERROR -->
+          <div *ngIf="form.errors?.['overlap']" class="error">
+            This work order overlaps with an existing one.
+          </div>
         </div>
+
       </div>
     </form>
+
   </div>
 </div>

@@ -257,6 +257,17 @@ export class TimelineComponent implements OnChanges {
 
       return { firstIndex, lastIndex: realLastIndex };
     }
+    onMenuEdit(order: WorkOrderDocument, event: MouseEvent) {
+      event.stopPropagation();
+      this.menuState[order.docId] = false;
+      this.onBarClick(order);
+    }
+
+    onMenuDelete(order: WorkOrderDocument, event: MouseEvent) {
+      event.stopPropagation();
+      this.menuState[order.docId] = false;
+      this.deleteOrder(order);
+    }
 
 
 }

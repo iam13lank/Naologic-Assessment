@@ -49,8 +49,8 @@
             </button>
 
             <div class="menu-dropdown" *ngIf="menuState[order.docId]">
-              <div class="menu-item" (click)="onBarClick(order)">Edit</div>
-              <div class="menu-item delete" (click)="deleteOrder(order)">Delete</div>
+              <div class="menu-item" (click)="onMenuEdit(order, $event)">Edit</div>
+              <div class="menu-item delete" (click)="onMenuDelete(order, $event)">Delete</div>
             </div>
           </div>
         </div>

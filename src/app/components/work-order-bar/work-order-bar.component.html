@@ -1,0 +1,28 @@
+<!-- <div
+  class="workorder-bar"
+  [ngClass]="order.data.status"
+  *ngFor="let order of getWorkorderByCenterId(wc.docId)"
+  [ngStyle]="getBarStyle(order)"
+>
+  <div class="bar-content">
+    <span class="bar-title">{{ order.data.name }}</span>
+
+    <span class="status-pill" [class]="order.data.status">
+      {{ order.data.status }}
+    </span>
+
+    <div class="menu-wrapper" (click)="$event.stopPropagation()">
+      <button
+        class="menu-button"
+        (click)="toggleMenu(order.docId)"
+      >
+        &#8230;
+      </button>
+
+      <div class="menu-dropdown" *ngIf="menuState[order.docId]">
+        <div class="menu-item" (click)="onMenuEdit(order, $event)">Edit</div>
+        <div class="menu-item delete" (click)="onMenuDelete(order, $event)">Delete</div>
+      </div>
+    </div>
+  </div>
+</div> -->

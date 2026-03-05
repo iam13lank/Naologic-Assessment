@@ -185,3 +185,8 @@
 .status-pill.complete { background: rgba(225, 255, 204, 1);  color: rgba(8, 162, 104, 1); }
 .status-pill.blocked { background: rgba(252, 238, 181, 1); color: rgba(177, 54, 0, 1); }
 
+.error {
+  color: #d9534f;
+  font-size: 12px;
+  margin-top: 4px;
+}
