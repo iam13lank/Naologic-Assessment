@@ -58,43 +58,64 @@
         </ng-select>
       </div>
 
-      <!-- DATE ROW -->
-      <div class="form-row">
+      <!-- START DATE -->
+      <div class="form-group">
+        <label for="start">Start date</label>
 
-        <!-- START DATE -->
-        <div class="form-group half">
-          <label for="start">Start date</label>
+        <div class="datepicker-wrapper">
           <input
             id="start"
             class="text-input"
-            ngbDatepicker
             formControlName="start"
-            #startDp="ngbDatepicker"
-            (click)="startDp.toggle()"
             [placeholder]="todayPlaceholder"
+            readonly
+            [value]="formatStruct(form.value.start)"
+            readonly
+            (click)="openStart()"
           />
-        </div>
 
-        <!-- END DATE -->
-        <div class="form-group half">
-          <label for="end">End date</label>
+          <div class="datepicker-popup" *ngIf="startOpen" (click)="$event.stopPropagation()">
+            <ngb-datepicker
+              [navigation]="'select'"
+              [displayMonths]="1"
+              [showWeekNumbers]="false"
+              (dateSelect)="onStartSelect($event)"
+            ></ngb-datepicker>
+          </div>
+        </div>
+      </div>
+
+      <!-- END DATE -->
+      <div class="form-group">
+        <label for="end">End date</label>
+
+        <div class="datepicker-wrapper">
           <input
             id="end"
             class="text-input"
-            ngbDatepicker
             formControlName="end"
-            #endDp="ngbDatepicker"
-            (click)="endDp.toggle()"
             [placeholder]="nextWeekPlaceholder"
+            [value]="formatStruct(form.value.end)"
+            readonly
+            (click)="openEnd()"
           />
 
-          <!-- OVERLAP ERROR -->
-          <div *ngIf="form.errors?.['overlap']" class="error">
-            This work order overlaps with an existing one.
+          <div class="datepicker-popup" *ngIf="endOpen" (click)="$event.stopPropagation()">
+            <ngb-datepicker
+              [navigation]="'select'"
+              [displayMonths]="1"
+              [showWeekNumbers]="false"
+              (dateSelect)="onEndSelect($event)"
+            ></ngb-datepicker>
           </div>
         </div>
 
+        <div *ngIf="form.errors?.['overlap']" class="error">
+          This work order overlaps with an existing one.
+        </div>
       </div>
+
+
     </form>
 
   </div>

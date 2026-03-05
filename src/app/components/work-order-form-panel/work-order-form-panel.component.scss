@@ -1,16 +1,16 @@
 .panel-wrapper {
   position: fixed;
-  inset: 0; /* full screen */
-  background: rgba(0,0,0,0.4); /* dim backdrop */
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
   opacity: 0;
   pointer-events: none;
   transition: opacity .25s ease;
   z-index: 90;
-}
 
-.panel-wrapper.open {
-  opacity: 1;
-  pointer-events: auto; /* now it receives clicks */
+  &.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .panel {
@@ -24,14 +24,12 @@
     0 5px 15px rgba(216, 220, 235, 1),
     0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
     0 4.5px 5px -1px rgba(216, 220, 235, 1);
-  transition: right 0.3s ease;
+  transition: right .3s ease;
+
+  .panel-wrapper.open & {
+    right: 0;
+  }
 }
-
-.panel-wrapper.open .panel {
-  right: 0;
-}
-
-
 .panel-header {
   display: flex;
   justify-content: space-between;
@@ -39,25 +37,26 @@
   padding: 16px 20px;
   border-bottom: 1px solid #e2e2e2;
   background: #fafafa;
-}
 
-.panel-title-block h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-}
+  .panel-title-block {
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
 
-.panel-subtitle {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: #777;
-}
+    .panel-subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #777;
+    }
+  }
 
-.panel-actions {
-  display: flex;
-  gap: 8px;
+  .panel-actions {
+    display: flex;
+    gap: 8px;
+  }
 }
-
 .btn {
   padding: 6px 14px;
   border-radius: 4px;
@@ -65,25 +64,21 @@
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;
-}
 
-.btn-secondary {
-  background: #f2f2f2;
-  color: #333;
-}
+  &.btn-secondary {
+    background: #f2f2f2;
+    color: #333;
+  }
 
-.btn-primary {
-  background: #4a90e2;
-  color: #fff;
+  &.btn-primary {
+    background: #4a90e2;
+    color: #fff;
+  }
 }
-
 .panel-body {
   padding: 16px 20px;
-  overflow-y: auto;
-  flex: 1;
 }
 
-/* FORM */
 .form-group {
   margin-bottom: 16px;
 
@@ -96,17 +91,6 @@
   }
 }
 
-.form-row {
-  display: flex;
-  gap: 12px;
-  flex-direction: column;
-}
-
-.form-group.half {
-  flex: 1;
-}
-
-/* TEXT INPUTS */
 .text-input {
   width: 100%;
   padding: 6px 8px;
@@ -114,9 +98,16 @@
   border: 1px solid #dcdcdc;
   font-size: 14px;
   font-family: "Circular-Std";
+  cursor: pointer;
+  caret-color: transparent;
 }
 
-/* NG-SELECT BASE */
+.error {
+  color: #d9534f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+/* NG-SELECT */
 ::ng-deep .ng-select-container {
   height: 36px;
   border: 1px solid #dcdcdc;
@@ -126,20 +117,18 @@
   display: flex;
   align-items: center;
   font-family: "Circular-Std";
+
+  &:hover {
+    border-color: #b5b5b5;
+  }
 }
 
-::ng-deep .ng-select-container:hover {
-  border-color: #b5b5b5;
-}
-
-/* Placeholder */
 ::ng-deep .ng-select .ng-placeholder {
   color: #9b9b9b !important;
   font-weight: 400;
   font-family: "Circular-Std";
 }
 
-/* Dropdown panel */
 ::ng-deep .ng-dropdown-panel {
   border: 1px solid #dcdcdc;
   border-radius: 6px;
@@ -147,7 +136,6 @@
   background: #fff;
 }
 
-/* Dropdown items (plain text) */
 .status-option {
   font-size: 14px;
   text-transform: capitalize;
@@ -155,38 +143,65 @@
   font-family: "Circular-Std";
 }
 
-/* Hover: ONLY text turns purple */
 ::ng-deep .ng-dropdown-panel .ng-option:hover {
   background: transparent !important;
+
+  .status-option {
+    color: #673ab7;
+  }
 }
 
-::ng-deep .ng-dropdown-panel .ng-option:hover .status-option {
-  color: #673ab7;
-}
-
-/* Selected option in dropdown (remove background highlight) */
 ::ng-deep .ng-dropdown-panel .ng-option-selected {
   background: transparent !important;
   font-weight: 500;
 }
-
-/* SELECTED VALUE PILL */
 .status-pill {
   padding: 3px 8px;
   border-radius: 6px;
   font-size: 13px;
   text-transform: capitalize;
-  color: white;
+  color: #fff;
   font-family: "Circular-Std";
+
+  &.open {
+    background: rgba(228, 253, 255, 1);
+    color: rgba(0, 176, 191, 1);
+  }
+
+  &.in-progress {
+    background: rgba(214, 216, 255, 1);
+    color: rgba(62, 64, 219, 1);
+  }
+
+  &.complete {
+    background: rgba(225, 255, 204, 1);
+    color: rgba(8, 162, 104, 1);
+  }
+
+  &.blocked {
+    background: rgba(252, 238, 181, 1);
+    color: rgba(177, 54, 0, 1);
+  }
 }
 
-.status-pill.open { background: rgba(228, 253, 255, 1); color: rgba(0, 176, 191, 1);} 
-.status-pill.in-progress { background: rgba(214, 216, 255, 1);  color: rgba(62, 64, 219, 1);}
-.status-pill.complete { background: rgba(225, 255, 204, 1);  color: rgba(8, 162, 104, 1); }
-.status-pill.blocked { background: rgba(252, 238, 181, 1); color: rgba(177, 54, 0, 1); }
 
-.error {
-  color: #d9534f;
-  font-size: 12px;
-  margin-top: 4px;
+
+.datepicker-wrapper {
+  position: relative;
+}
+
+.datepicker-popup {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  z-index: 9999;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 4px;
+}
+
+::ng-deep .ngb-dp-header .visually-hidden  {
+  display: none !important;
 }

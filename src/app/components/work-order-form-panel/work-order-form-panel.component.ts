@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { WorkOrderService } from '../../services/work-order.service';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { WorkOrderDocument, WorkOrderStatus } from '../../models/work-order.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
@@ -12,10 +12,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, NgbDatepickerModule, NgSelectModule],
   templateUrl: './work-order-form-panel.component.html',
-  styleUrls: ['./work-order-form-panel.component.scss']
+  styleUrls: ['./work-order-form-panel.component.scss'],
 })
 export class WorkOrderFormPanelComponent implements OnInit {
-
   @Input() workOrderForm: WorkOrderDocument | null = null;
 
   form!: FormGroup;
@@ -24,7 +23,6 @@ export class WorkOrderFormPanelComponent implements OnInit {
   panelOpen = false;
   todayPlaceholder = '';
   nextWeekPlaceholder = '';
-
 
   private selectedWorkCenterId: string | null = null;
   constructor(private workOrderService: WorkOrderService) {}
@@ -38,20 +36,16 @@ export class WorkOrderFormPanelComponent implements OnInit {
     this.nextWeekPlaceholder = nextWeek.toISOString().split('T')[0];
 
     this.form = new FormGroup(
-    {
-      name: new FormControl('', { validators: [Validators.required] }),
-      status: new FormControl('open', { nonNullable: true }),
-      start: new FormControl('', { validators: [Validators.required] }),
-      end: new FormControl('', { validators: [Validators.required] })
-    },
-    {
-      validators: [
-        this.dateRangeValidator.bind(this),
-        this.overlapValidator.bind(this)
-      ]
-    }
-  );
-
+      {
+        name: new FormControl('', { validators: [Validators.required] }),
+        status: new FormControl('open', { nonNullable: true }),
+        start: new FormControl('', { validators: [Validators.required] }),
+        end: new FormControl('', { validators: [Validators.required] }),
+      },
+      {
+        validators: [this.dateRangeValidator.bind(this), this.overlapValidator.bind(this)],
+      },
+    );
   }
   private dateRangeValidator(control: AbstractControl) {
     const form = control as FormGroup;
@@ -66,7 +60,6 @@ export class WorkOrderFormPanelComponent implements OnInit {
     return endDate < startDate ? { invalidRange: true } : null;
   }
 
-
   private overlapValidator(control: AbstractControl) {
     if (!this.selectedWorkCenterId) return null;
     const form = control as FormGroup;
@@ -80,7 +73,7 @@ export class WorkOrderFormPanelComponent implements OnInit {
 
     const allOrders = this.workOrderService.getAll();
 
-    const overlapping = allOrders.some(order => {
+    const overlapping = allOrders.some((order) => {
       if (order.data.workCenterId !== this.selectedWorkCenterId) return false;
 
       // Skip the order being edited
@@ -100,7 +93,7 @@ export class WorkOrderFormPanelComponent implements OnInit {
     return {
       year: d.getFullYear(),
       month: d.getMonth() + 1,
-      day: d.getDate()
+      day: d.getDate(),
     };
   }
 
@@ -130,7 +123,7 @@ export class WorkOrderFormPanelComponent implements OnInit {
       name: '',
       status: 'open',
       start: '',
-      end: ''
+      end: '',
     });
 
     this.panelOpen = true;
@@ -147,7 +140,7 @@ export class WorkOrderFormPanelComponent implements OnInit {
       name: order.data.name,
       status: order.data.status,
       start: this.toStruct(new Date(order.data.startDate)),
-      end: this.toStruct(new Date(order.data.endDate))
+      end: this.toStruct(new Date(order.data.endDate)),
     });
 
     this.panelOpen = true;
@@ -163,7 +156,7 @@ export class WorkOrderFormPanelComponent implements OnInit {
     if (!this.form.value.start && this.todayPlaceholder) {
       const startDate = this.fromIsoDateStringLocal(this.todayPlaceholder);
       this.form.patchValue({
-        start: this.toStruct(startDate)
+        start: this.toStruct(startDate),
       });
     }
 
@@ -171,7 +164,7 @@ export class WorkOrderFormPanelComponent implements OnInit {
     if (!this.form.value.end && this.nextWeekPlaceholder) {
       const endDate = this.fromIsoDateStringLocal(this.nextWeekPlaceholder);
       this.form.patchValue({
-        end: this.toStruct(endDate)
+        end: this.toStruct(endDate),
       });
     }
 
@@ -192,8 +185,8 @@ export class WorkOrderFormPanelComponent implements OnInit {
         status: raw.status,
         workCenterId: this.workOrderForm?.data.workCenterId ?? this.selectedWorkCenterId!,
         startDate: this.toDate(raw.start).toISOString(),
-        endDate: this.toDate(raw.end).toISOString()
-      }
+        endDate: this.toDate(raw.end).toISOString(),
+      },
     };
 
     if (this.workOrderForm) {
@@ -204,6 +197,39 @@ export class WorkOrderFormPanelComponent implements OnInit {
 
     this.panelOpen = false;
   }
+  formatStruct(date: NgbDateStruct | null): string {
+    if (!date) return '';
+    const y = date.year;
+    const m = String(date.month).padStart(2, '0');
+    const d = String(date.day).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
 
+  startOpen = false;
+  endOpen = false;
+  openStart() {
+    this.startOpen = !this.startOpen;
+    this.endOpen = false;
+  }
 
+  openEnd() {
+    this.endOpen = !this.endOpen;
+    this.startOpen = false;
+  }
+
+  onStartSelect(date: NgbDateStruct) {
+    this.form.patchValue({ start: date });
+    this.startOpen = false;
+  }
+
+  onEndSelect(date: NgbDateStruct) {
+    this.form.patchValue({ end: date });
+    this.endOpen = false;
+  }
+
+  @HostListener('document:click')
+  closeAll() {
+    this.startOpen = false;
+    this.endOpen = false;
+  }
 }
