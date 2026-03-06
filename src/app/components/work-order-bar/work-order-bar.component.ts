@@ -13,7 +13,7 @@ export class WorkOrderBarComponent {
 
   @Input() order!: WorkOrderDocument;
   @Input() visibleCells!: { date: Date; label: string }[];
-  @Input() timescale!: 'day' | 'week' | 'month';
+  @Input() timescale!: 'Day' | 'Week' | 'Month';
 
   @Output() edit = new EventEmitter<WorkOrderDocument>();
   @Output() delete = new EventEmitter<WorkOrderDocument>();
@@ -74,7 +74,7 @@ export class WorkOrderBarComponent {
     const target = new Date(date);
     target.setHours(0, 0, 0, 0);
 
-    if (this.timescale === 'day') {
+    if (this.timescale === 'Day') {
       return this.visibleCells.findIndex(c => {
         const d = new Date(c.date);
         d.setHours(0, 0, 0, 0);
@@ -82,7 +82,7 @@ export class WorkOrderBarComponent {
       });
     }
 
-    if (this.timescale === 'week') {
+    if (this.timescale === 'Week') {
       const targetWeek = this.getWeekNumber(target);
       const targetYear = target.getFullYear();
 
@@ -93,7 +93,7 @@ export class WorkOrderBarComponent {
       });
     }
 
-    if (this.timescale === 'month') {
+    if (this.timescale === 'Month') {
       const targetMonth = target.getMonth();
       const targetYear = target.getFullYear();
 
@@ -106,9 +106,9 @@ export class WorkOrderBarComponent {
     return -1;
   }
   getCellWidth() {
-    if (this.timescale === 'day') return 180;
-    if (this.timescale === 'week') return 200;
-    if (this.timescale === 'month') return 150;
+    if (this.timescale === 'Day') return 180;
+    if (this.timescale === 'Week') return 200;
+    if (this.timescale === 'Month') return 150;
     return 80;
   }
   getWeekNumber(date: Date): number {

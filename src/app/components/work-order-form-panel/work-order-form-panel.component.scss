@@ -34,9 +34,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 16px 20px;
+  padding: 16px 20px 0 20px;
   border-bottom: 1px solid #e2e2e2;
-  background: #fafafa;
 
   .panel-title-block {
     h2 {
@@ -79,7 +78,7 @@
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 30px;
 
   label {
     display: block;
@@ -91,7 +90,7 @@
 }
 
 .text-input {
-  width: 100%;
+  width: 540px;
   padding: 6px 8px;
   border-radius: 6px;
   border: 1px solid #dcdcdc;
@@ -206,3 +205,25 @@
 ::ng-deep .ngb-dp-header .visually-hidden  {
   display: none !important;
 }
+/* Add caret to the right side of the status dropdown */
+/* Add triangle after the status dropdown */
+::ng-deep .status-select .ng-select-container {
+  position: relative;
+  padding-right: 26px; /* space for triangle */
+}
+
+/* Solid triangle ▼ */
+::ng-deep .status-select .ng-select-container::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid rgba(104, 113, 150, 1); /* triangle color */
+  pointer-events: none;
+}
+

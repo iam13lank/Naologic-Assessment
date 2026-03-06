@@ -14,7 +14,7 @@ import { WorkOrderBarComponent } from '../work-order-bar/work-order-bar.componen
 })
 export class TimelineComponent implements OnChanges {
 
-  @Input() timescale: 'day' | 'week' | 'month' = 'day';
+  @Input() timescale: 'Day' | 'Week' | 'Month' = 'Day';
 
   @Output() createAtDate = new EventEmitter<{ date: Date; workCenterId: string | null }>();
   @Output() editOrder = new EventEmitter<WorkOrderDocument>();
@@ -120,23 +120,23 @@ export class TimelineComponent implements OnChanges {
   // TIMELINE CELL CALCULATION
   // -------------------------------
 
-  calculateVisibleCells(timescale: 'day' | 'week' | 'month') {
+  calculateVisibleCells(timescale: 'Day' | 'Week' | 'Month') {
     const today = new Date();
 
     const start = new Date(today);
     const end = new Date(today);
 
-    if (timescale === 'day') {
+    if (timescale === 'Day') {
       start.setDate(start.getDate() - 14);
       end.setDate(end.getDate() + 14);
     }
 
-    if (timescale === 'week') {
+    if (timescale === 'Week') {
       start.setDate(start.getDate() - 56);
       end.setDate(end.getDate() + 56);
     }
 
-    if (timescale === 'month') {
+    if (timescale === 'Month') {
       start.setMonth(start.getMonth() - 6);
       end.setMonth(end.getMonth() + 6);
     }
@@ -145,7 +145,7 @@ export class TimelineComponent implements OnChanges {
     const current = new Date(start);
 
     while (current <= end) {
-      if (timescale === 'day') {
+      if (timescale === 'Day') {
         cells.push({
           date: new Date(current),
           label: current.toLocaleDateString('en-US', {
@@ -156,7 +156,7 @@ export class TimelineComponent implements OnChanges {
         current.setDate(current.getDate() + 1);
       }
 
-      if (timescale === 'week') {
+      if (timescale === 'Week') {
         const weekLabel = `Week ${this.getWeekNumber(current)}`;
         cells.push({
           date: new Date(current),
@@ -165,7 +165,7 @@ export class TimelineComponent implements OnChanges {
         current.setDate(current.getDate() + 7);
       }
 
-      if (timescale === 'month') {
+      if (timescale === 'Month') {
         cells.push({
           date: new Date(current),
           label: current.toLocaleDateString('en-US', {
@@ -191,9 +191,9 @@ export class TimelineComponent implements OnChanges {
   
 
   getCellWidth() {
-    if (this.timescale === 'day') return 180;
-    if (this.timescale === 'week') return 200;
-    if (this.timescale === 'month') return 150;
+    if (this.timescale === 'Day') return 150;
+    if (this.timescale === 'Week') return 150;
+    if (this.timescale === 'Month') return 150;
     return 80;
   }
 

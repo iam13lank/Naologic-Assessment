@@ -11,9 +11,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
   styleUrl: './app.scss'
 })
 export class App {
-  timescale: 'day' | 'week' | 'month' = 'day';
+  timescale: 'Day' | 'Week' | 'Month' = 'Day';
 
-  onTimescaleChange(newTimescale: 'day' | 'week' | 'month') {
+  onTimescaleChange(newTimescale: 'Day' | 'Week' | 'Month') {
     this.timescale = newTimescale;
   }
   
