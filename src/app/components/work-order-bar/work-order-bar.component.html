@@ -1,20 +1,22 @@
 <div class="workorder-bar" [ngClass]="order.data.status" [ngStyle]="getBarStyle()">
   <div class="bar-content">
     <span class="bar-title">{{ order.data.name }}</span>
+    <div class="right-side">
+      <span class="status-pill" [class]="order.data.status">
+        {{ order.data.status }}
+      </span>
 
-    <span class="status-pill" [class]="order.data.status">
-      {{ order.data.status }}
-    </span>
+      <div class="menu-wrapper" (click)="$event.stopPropagation()">
+        <button class="menu-button" (click)="toggleMenu($event)">
+          &#8230;
+        </button>
 
-    <div class="menu-wrapper" (click)="$event.stopPropagation()">
-      <button class="menu-button" (click)="toggleMenu($event)">
-        &#8230;
-      </button>
-
-      <div class="menu-dropdown" *ngIf="menuOpen">
-        <div class="menu-item" (click)="onEdit($event)">Edit</div>
-        <div class="menu-item delete" (click)="onDelete($event)">Delete</div>
+        <div class="menu-dropdown" *ngIf="menuOpen">
+          <div class="menu-item" (click)="onEdit($event)">Edit</div>
+          <div class="menu-item delete" (click)="onDelete($event)">Delete</div>
+        </div>
       </div>
     </div>
   </div>
+
 </div>

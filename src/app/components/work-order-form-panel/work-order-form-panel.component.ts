@@ -21,7 +21,7 @@ export class WorkOrderFormPanelComponent implements OnInit {
   statusOptions: WorkOrderStatus[] = ['open', 'in-progress', 'complete', 'blocked'];
 
   panelOpen = false;
-  todayPlaceholder = '';
+  selectedPlaceholder = '';
   nextWeekPlaceholder = '';
 
   private selectedWorkCenterId: string | null = null;
@@ -32,15 +32,15 @@ export class WorkOrderFormPanelComponent implements OnInit {
     const nextWeek = new Date();
     nextWeek.setDate(today.getDate() + 7);
 
-    this.todayPlaceholder = today.toISOString().split('T')[0];
+    this.selectedPlaceholder = today.toISOString().split('T')[0];
     this.nextWeekPlaceholder = nextWeek.toISOString().split('T')[0];
 
     this.form = new FormGroup(
       {
         name: new FormControl('', { validators: [Validators.required] }),
         status: new FormControl('open', { nonNullable: true }),
-        start: new FormControl('', { validators: [Validators.required] }),
-        end: new FormControl('', { validators: [Validators.required] }),
+        start: new FormControl(null as NgbDateStruct | null, { validators: [Validators.required] }),
+        end: new FormControl(null as NgbDateStruct | null, { validators: [Validators.required] }),
       },
       {
         validators: [this.dateRangeValidator.bind(this), this.overlapValidator.bind(this)],
@@ -101,10 +101,6 @@ export class WorkOrderFormPanelComponent implements OnInit {
   private toDate(struct: any): Date {
     return new Date(struct.year, struct.month - 1, struct.day);
   }
-  private fromIsoDateStringLocal(iso: string): Date {
-    const [year, month, day] = iso.split('-').map(Number);
-    return new Date(year, month - 1, day); // local date, no timezone shift
-  }
 
   openCreatePanel(event: { date: Date; workCenterId: string | null }) {
     this.selectedWorkCenterId = event.workCenterId;
@@ -115,26 +111,24 @@ export class WorkOrderFormPanelComponent implements OnInit {
     nextWeek.setDate(clicked.getDate() + 7);
 
     // Set placeholders based on clicked date
-    this.todayPlaceholder = clicked.toISOString().split('T')[0];
+    this.selectedPlaceholder = clicked.toISOString().split('T')[0];
     this.nextWeekPlaceholder = nextWeek.toISOString().split('T')[0];
 
     // Reset form with empty values (required validators will handle empties)
     this.form.reset({
       name: '',
       status: 'open',
-      start: '',
-      end: '',
+      start: null,
+      end: null,
     });
-
     this.panelOpen = true;
-
     // Re-run validators now that workCenterId is known
     this.form.updateValueAndValidity();
   }
 
   /** OPEN PANEL FOR EDIT */
   openEditPanel(order: WorkOrderDocument) {
-    console.log('Editing order:', order);
+    console.log(order)
     this.workOrderForm = order;
     this.form.setValue({
       name: order.data.name,
@@ -146,27 +140,32 @@ export class WorkOrderFormPanelComponent implements OnInit {
     this.panelOpen = true;
   }
 
+
   /** CLOSE PANEL */
   close() {
     this.panelOpen = false;
   }
-
+  formatStruct(date: NgbDateStruct | null): string {
+    if (!date) return '';
+    const y = date.year;
+    const m = String(date.month).padStart(2, '0');
+    const d = String(date.day).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
   submit() {
     // Auto-fill start date if empty
-    if (!this.form.value.start && this.todayPlaceholder) {
-      const startDate = this.fromIsoDateStringLocal(this.todayPlaceholder);
+    if (!this.form.value.start) {
       this.form.patchValue({
-        start: this.toStruct(startDate),
+        start: this.toStruct(new Date(this.selectedPlaceholder)),
       });
     }
 
-    // Auto-fill end date if empty
-    if (!this.form.value.end && this.nextWeekPlaceholder) {
-      const endDate = this.fromIsoDateStringLocal(this.nextWeekPlaceholder);
+    if (!this.form.value.end) {
       this.form.patchValue({
-        end: this.toStruct(endDate),
+        end: this.toStruct(new Date(this.nextWeekPlaceholder)),
       });
     }
+
 
     this.form.updateValueAndValidity();
 
@@ -184,9 +183,9 @@ export class WorkOrderFormPanelComponent implements OnInit {
         name: raw.name,
         status: raw.status,
         workCenterId: this.workOrderForm?.data.workCenterId ?? this.selectedWorkCenterId!,
-        startDate: this.toDate(raw.start).toISOString(),
-        endDate: this.toDate(raw.end).toISOString(),
-      },
+        startDate: this.formatStruct(raw.start),
+        endDate: this.formatStruct(raw.end),
+      }
     };
 
     if (this.workOrderForm) {
@@ -197,14 +196,14 @@ export class WorkOrderFormPanelComponent implements OnInit {
 
     this.panelOpen = false;
   }
-  formatStruct(date: NgbDateStruct | null): string {
-    if (!date) return '';
-    const y = date.year;
-    const m = String(date.month).padStart(2, '0');
-    const d = String(date.day).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  }
+  
 
+
+
+
+
+
+  //PANEL CONTROLS
   startOpen = false;
   endOpen = false;
   openStart() {

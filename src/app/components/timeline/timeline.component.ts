@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { WorkOrderService } from '../../services/work-order.service';
 import { WorkCenterService } from '../../services/work-center.service';
 import { WorkOrderDocument } from '../../models/work-order.model';
@@ -18,6 +18,7 @@ export class TimelineComponent implements OnChanges {
 
   @Output() createAtDate = new EventEmitter<{ date: Date; workCenterId: string | null }>();
   @Output() editOrder = new EventEmitter<WorkOrderDocument>();
+  @ViewChildren('timelineCell') cellElements!: QueryList<ElementRef>;
 
   visibleCells: { date: Date; label: string }[] = [];
   workCenters: any;
@@ -25,6 +26,11 @@ export class TimelineComponent implements OnChanges {
   hoveredCellIndex: number | null = null;
   hoveredDate: Date | null = null;
   selectedWorkCenterId: string | null = null;
+  hoverPopup = {
+    visible: false,
+    x: 0,
+    y: 0
+  };
 
   constructor(
     private workOrderService: WorkOrderService,
@@ -50,16 +56,36 @@ export class TimelineComponent implements OnChanges {
   // CELL INTERACTION
   // -------------------------------
 
-  onCellHover(cell: { date: Date }, index: number, wc: { docId: string }) {
+  onCellHover(cell: { date: Date }, index: number, wc: { docId: string }, event: MouseEvent, cellEl: HTMLElement) {
     this.hoveredCellIndex = index;
     this.hoveredDate = cell.date;
     this.selectedWorkCenterId = wc.docId;
+    const rect = cellEl.getBoundingClientRect();
+    // Show popup only if this cell has no work orders
+    const hasOrders = this.getWorkorderByCenterId(wc.docId)
+      .some(o => this.isDateWithinOrder(cell.date, o));
+
+    if (!hasOrders && event) {
+       this.hoverPopup.visible = true;
+      this.hoverPopup.x = rect.left + rect.width / 2;  
+      this.hoverPopup.y = rect.top - 10;                
+    }
   }
+
+
+  isDateWithinOrder(date: Date, order: WorkOrderDocument) {
+    const start = new Date(order.data.startDate);
+    const end = new Date(order.data.endDate);
+    return date >= start && date <= end;
+  }
+
 
   onCellLeave() {
     this.hoveredCellIndex = null;
     this.hoveredDate = null;
+    this.hoverPopup.visible = false;
   }
+
 
   onCellClick(cell: { date: Date }, wc: { docId: string }) {
     this.createAtDate.emit({

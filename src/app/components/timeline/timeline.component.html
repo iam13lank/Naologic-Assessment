@@ -2,7 +2,7 @@
 
   <!-- LEFT COLUMN -->
   <div class="work-center-column">
-    <h3>Work Center</h3>
+    <div class = "work-center-label"> <h3>Work Center</h3></div>
     <ul>
       <li 
         *ngFor="let center of workCenters"
@@ -34,11 +34,14 @@
         <!-- CELLS -->
         <div 
           class="cell"
+          #cellEl
           *ngFor="let cell of visibleCells; let i = index"
-          (mouseenter)="onCellHover(cell, i, wc)"
+          (mouseenter)="onCellHover(cell, i, wc, $event, cellEl)"
+          
           (mouseleave)="onCellLeave()"
           (click)="onCellClick(cell, wc)"
         ></div>
+
 
         <!-- WORK ORDER BARS -->
         <app-work-order-bar
@@ -52,6 +55,16 @@
 
       </div>
     </div>
+    <!-- HOVER POPUP -->
+    <div 
+      class="cell-popup" 
+      *ngIf="hoverPopup.visible"
+      [style.top.px]="hoverPopup.y"
+      [style.left.px]="hoverPopup.x"
+    >
+      Click to add dates
+    </div>
+
 
   </div>
 </div>
