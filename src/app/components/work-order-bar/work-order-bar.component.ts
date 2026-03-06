@@ -61,7 +61,7 @@ export class WorkOrderBarComponent {
     if (startIndex === -1 || endIndex === -1) return {};
 
     const cellWidth = this.getCellWidth();
-
+    console.log(cellWidth)
     return {
       left: `${startIndex * cellWidth}px`,
       width: `${(endIndex - startIndex + 1) * cellWidth}px`,
@@ -106,8 +106,8 @@ export class WorkOrderBarComponent {
     return -1;
   }
   getCellWidth() {
-    if (this.timescale === 'Day') return 180;
-    if (this.timescale === 'Week') return 200;
+    if (this.timescale === 'Day') return 150;
+    if (this.timescale === 'Week') return 150;
     if (this.timescale === 'Month') return 150;
     return 80;
   }
