@@ -1,59 +1,92 @@
-# NaologicAssessment
+# Naologic Assessment – Work Order Timeline Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+A fully interactive Angular application that visualizes work orders across multiple timescales (Day, Week, Month) using a custom-built timeline/Gantt‑style UI. Users can create, edit, and delete work orders, and all changes persist automatically using browser localStorage.
 
-## Development server
+---
 
-To start a local development server, run:
+## Features
+
+- Interactive timeline with Day, Week, and Month views  
+- Slide‑in panel for creating and editing work orders  
+- Custom datepicker integration using `@ng-bootstrap/ng-bootstrap`  
+- Styled dropdowns using `@ng-select/ng-select`  
+- Non-overlapping work order rendering per work center  
+- LocalStorage persistence (work orders survive page refreshes)  
+- Standalone Angular components (Angular 17+ style)  
+- Reactive Forms with custom validators (date range + overlap detection)  
+- Responsive layout with sticky headers and scrollable timeline  
+
+---
+
+## Tech Stack
+
+- **Angular 21.2.0**  
+- **TypeScript 5.9**  
+- **RxJS 7.8**  
+- **ng-bootstrap 20** (datepicker)  
+- **ng-select 21.5** (dropdowns)  
+- **Vitest** for unit testing  
+- **LocalStorage** for persistence  
+- **SCSS** for styling  
+
+---
+
+## Required Angular Modules
+
+The application uses the following Angular modules:
+
+- `CommonModule`  
+- `ReactiveFormsModule`  
+- `NgbDatepickerModule`  
+- `NgSelectModule`  
+- `RouterModule` (if routing is enabled)  
+
+Each standalone component imports only what it needs.
+
+
+## Development Server
+
+Start the development server:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Then open:
 
-## Code scaffolding
+http://localhost:4200/
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Dependencies
+  Runtime Dependencies
+    @angular/common
 
-```bash
-ng generate --help
-```
+    @angular/core
 
-## Building
+    @angular/forms
 
-To build the project run:
+    @angular/router
 
-```bash
-ng build
-```
+    @ng-bootstrap/ng-bootstrap
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+    @ng-select/ng-select
 
-## Running unit tests
+    rxjs
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+    tslib
 
-```bash
-ng test
-```
+## Dev Dependencies
+    @angular/cli
 
-## Running end-to-end tests
+    @angular/build
 
-For end-to-end (e2e) testing, run:
+    @angular/compiler-cli
 
-```bash
-ng e2e
-```
+    typescript
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+    vitest
 
-## Additional Resources
+    jsdom
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+    prettier
