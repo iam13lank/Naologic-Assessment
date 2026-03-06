@@ -1,3 +1,16 @@
+* {
+  cursor: default !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+}
+.typing-enabled {
+  cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+}
+
 /* ============================================
    NAOLOGIC TOP BAR
 ============================================ */
@@ -49,33 +62,36 @@
   display: flex;
   align-items: center;
 }
+.timescale-zoom-controls-label {
+    background-color: rgba(241, 243, 248, 0.75);
+    color: rgba(104, 113, 150, 1);
+    font-family: CircularStd-Book;
+    font-size: 13px;
+    font-weight: 400;
+    padding: 6px 12px;
+    pointer-events: none;
 
+}
 .timescale-select {
-  width: 160px;
-  font-size: 14px;
+  font-family: CircularStd-Medium;
+  font-size: 13px;
+  font-weight: 500;
+  caret-color: transparent;
 }
 
-/* ng-select container */
-::ng-deep .timescale-select .ng-select-container {
-  height: 36px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: #fafafa;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
-  font-family: "Circular-Std";
-}
-
-/* Placeholder */
-::ng-deep .timescale-select .ng-placeholder {
-  color: #666;
-  font-size: 14px;
-}
 
 /* Dropdown arrow */
 ::ng-deep .timescale-select .ng-arrow-wrapper {
   width: 20px;
+  transform: rotate( 270deg );
+  height: 8.47px;
+
+}
+::ng-deep .timescale-select .ng-select-container {
+  height: 28px;
+  border-radius: 0 2px 7px 0;
+  border : none;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Hover */
@@ -83,21 +99,33 @@
   border-color: #999;
   background: #f0f0f0;
 }
-
+::ng-deep .timescale-select .ng-value-label {
+  color: rgba(62, 64, 219, 1);
+}
+::ng-deep .timescale-select .ng-option-selected {
+   color: rgba(62, 64, 219, 1);
+}
 /* Dropdown panel */
-::ng-deep .ng-dropdown-panel {
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+::ng-deep .timescale-select .ng-dropdown-panel {
+  width: 200px !important;
+  height: 136px;
+  border-radius: 5px;
+  right: -52px;
+
 }
 
 /* Dropdown items */
 ::ng-deep .ng-dropdown-panel .ng-option {
   padding: 8px 12px;
   font-size: 14px;
-  text-transform: uppercase;
 }
 
 ::ng-deep .ng-dropdown-panel .ng-option:hover {
   background: #e6f2ff;
+}
+::ng-deep.ng-select .ng-clear-wrapper {
+  display: none;
+}
+::ng-dee .ng-select .ng-value {
+  color: rgba(62, 64, 219, 1);
 }

@@ -26,7 +26,7 @@
           id="name"
           formControlName="name"
           type="text"
-          class="text-input"
+          class="text-input  typing-enabled"
           placeholder="Acme Inc."
         />
 
@@ -65,7 +65,7 @@
         <div class="datepicker-wrapper">
           <input
             id="start"
-            class="text-input"
+            class="text-input date-input"
             formControlName="start"
             [placeholder]="todayPlaceholder"
             readonly
@@ -92,7 +92,7 @@
         <div class="datepicker-wrapper">
           <input
             id="end"
-            class="text-input"
+            class="text-input date-input"
             formControlName="end"
             [placeholder]="nextWeekPlaceholder"
             [value]="formatStruct(form.value.end)"

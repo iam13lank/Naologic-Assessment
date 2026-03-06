@@ -9,12 +9,13 @@
   <h1>Work Orders</h1>
 
   <div class="timescale-zoom-controls">
+    <div class = "timescale-zoom-controls-label"><span>Timescale</span></div>
     <ng-select
       [items]="['day', 'week', 'month']"
       [(ngModel)]="timescale"
       (change)="onTimescaleChange(timescale)"
       bindLabel=""
-      placeholder="Timescale"
+      placeholder=""
       class="timescale-select"
     ></ng-select>
   </div>
