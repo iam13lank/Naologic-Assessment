@@ -25,126 +25,48 @@ export class WorkOrderFormPanelComponent implements OnInit {
   nextWeekPlaceholder = '';
 
   private selectedWorkCenterId: string | null = null;
+
   constructor(private workOrderService: WorkOrderService) {}
 
   ngOnInit() {
-    const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
+    const today = this.todayStruct();
+    const nextWeek = this.addDaysStruct(today, 7);
 
-    this.selectedPlaceholder = today.toISOString().split('T')[0];
-    this.nextWeekPlaceholder = nextWeek.toISOString().split('T')[0];
+    this.selectedPlaceholder = this.formatStruct(today);
+    this.nextWeekPlaceholder = this.formatStruct(nextWeek);
 
     this.form = new FormGroup(
       {
-        name: new FormControl('', { validators: [Validators.required] }),
+        name: new FormControl('', Validators.required),
         status: new FormControl('open', { nonNullable: true }),
-        start: new FormControl(null as NgbDateStruct | null, { validators: [Validators.required] }),
-        end: new FormControl(null as NgbDateStruct | null, { validators: [Validators.required] }),
+        start: new FormControl(null as NgbDateStruct | null, Validators.required),
+        end: new FormControl(null as NgbDateStruct | null, Validators.required),
       },
       {
         validators: [this.dateRangeValidator.bind(this), this.overlapValidator.bind(this)],
-      },
+      }
     );
   }
-  private dateRangeValidator(control: AbstractControl) {
-    const form = control as FormGroup;
-    const start = form.get('start')?.value;
-    const end = form.get('end')?.value;
 
-    if (!start || !end) return { invalidRange: true }; // force error
+  // -------------------------------
+  // DATE HELPERS (NO TIMEZONE EVER)
+  // -------------------------------
 
-    const startDate = this.toDate(start);
-    const endDate = this.toDate(end);
-
-    return endDate < startDate ? { invalidRange: true } : null;
+  private todayStruct(): NgbDateStruct {
+    const d = new Date();
+    return { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
   }
 
-  private overlapValidator(control: AbstractControl) {
-    if (!this.selectedWorkCenterId) return null;
-    const form = control as FormGroup;
-    const start = form.get('start')?.value;
-    const end = form.get('end')?.value;
-
-    if (!start || !end) return null;
-
-    const startDate = this.toDate(start);
-    const endDate = this.toDate(end);
-
-    const allOrders = this.workOrderService.getAll();
-
-    const overlapping = allOrders.some((order) => {
-      if (order.data.workCenterId !== this.selectedWorkCenterId) return false;
-
-      // Skip the order being edited
-      if (this.workOrderForm && order.docId === this.workOrderForm.docId) return false;
-
-      const oStart = new Date(order.data.startDate);
-      const oEnd = new Date(order.data.endDate);
-
-      return startDate <= oEnd && endDate >= oStart;
-    });
-
-    return overlapping ? { overlap: true } : null;
+  private addDaysStruct(date: NgbDateStruct, days: number): NgbDateStruct {
+    const js = new Date(date.year, date.month - 1, date.day + days);
+    return { year: js.getFullYear(), month: js.getMonth() + 1, day: js.getDate() };
   }
 
-  /** Convert JS Date → NgbDateStruct */
-  private toStruct(d: Date) {
-    return {
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-    };
+  private parseIsoToStruct(iso: string): NgbDateStruct {
+    const [y, m, d] = iso.split('-').map(Number);
+    return { year: y, month: m, day: d };
   }
 
-  /** Convert NgbDateStruct → JS Date */
-  private toDate(struct: any): Date {
-    return new Date(struct.year, struct.month - 1, struct.day);
-  }
-
-  openCreatePanel(event: { date: Date; workCenterId: string | null }) {
-    this.selectedWorkCenterId = event.workCenterId;
-    this.workOrderForm = null;
-
-    const clicked = new Date(event.date);
-    const nextWeek = new Date(clicked);
-    nextWeek.setDate(clicked.getDate() + 7);
-
-    // Set placeholders based on clicked date
-    this.selectedPlaceholder = clicked.toISOString().split('T')[0];
-    this.nextWeekPlaceholder = nextWeek.toISOString().split('T')[0];
-
-    // Reset form with empty values (required validators will handle empties)
-    this.form.reset({
-      name: '',
-      status: 'open',
-      start: null,
-      end: null,
-    });
-    this.panelOpen = true;
-    // Re-run validators now that workCenterId is known
-    this.form.updateValueAndValidity();
-  }
-
-  /** OPEN PANEL FOR EDIT */
-  openEditPanel(order: WorkOrderDocument) {
-    console.log(order)
-    this.workOrderForm = order;
-    this.form.setValue({
-      name: order.data.name,
-      status: order.data.status,
-      start: this.toStruct(new Date(order.data.startDate)),
-      end: this.toStruct(new Date(order.data.endDate)),
-    });
-
-    this.panelOpen = true;
-  }
-
-
-  /** CLOSE PANEL */
-  close() {
-    this.panelOpen = false;
-  }
   formatStruct(date: NgbDateStruct | null): string {
     if (!date) return '';
     const y = date.year;
@@ -152,23 +74,118 @@ export class WorkOrderFormPanelComponent implements OnInit {
     const d = String(date.day).padStart(2, '0');
     return `${y}-${m}-${d}`;
   }
+
+  private structToJs(date: NgbDateStruct): Date {
+    return new Date(date.year, date.month - 1, date.day);
+  }
+
+  // -------------------------------
+  // VALIDATORS
+  // -------------------------------
+
+  private dateRangeValidator(control: AbstractControl) {
+    const start = control.get('start')?.value;
+    const end = control.get('end')?.value;
+
+    if (!start || !end) return null;
+
+    const s = this.structToJs(start);
+    const e = this.structToJs(end);
+
+    return e < s ? { invalidRange: true } : null;
+  }
+
+  private overlapValidator(control: AbstractControl) {
+    if (!this.selectedWorkCenterId) return null;
+
+    const start = control.get('start')?.value;
+    const end = control.get('end')?.value;
+    if (!start || !end) return null;
+
+    const s = this.structToJs(start);
+    const e = this.structToJs(end);
+
+    const all = this.workOrderService.getAll();
+
+    const overlapping = all.some(order => {
+      if (order.data.workCenterId !== this.selectedWorkCenterId) return false;
+      if (this.workOrderForm && order.docId === this.workOrderForm.docId) return false;
+
+      const oStart = this.structToJs(this.parseIsoToStruct(order.data.startDate));
+      const oEnd = this.structToJs(this.parseIsoToStruct(order.data.endDate));
+
+      return s <= oEnd && e >= oStart;
+    });
+
+    return overlapping ? { overlap: true } : null;
+  }
+
+  // -------------------------------
+  // PANEL OPEN/CLOSE
+  // -------------------------------
+
+  openCreatePanel(event: { date: Date; workCenterId: string | null }) {
+    this.selectedWorkCenterId = event.workCenterId;
+    this.workOrderForm = null;
+
+    const clicked = {
+      year: event.date.getFullYear(),
+      month: event.date.getMonth() + 1,
+      day: event.date.getDate()
+    };
+
+    const nextWeek = this.addDaysStruct(clicked, 7);
+
+    this.selectedPlaceholder = this.formatStruct(clicked);
+    this.nextWeekPlaceholder = this.formatStruct(nextWeek);
+
+    this.form.reset({
+      name: '',
+      status: 'open',
+      start: null,
+      end: null,
+    });
+
+    this.panelOpen = true;
+    this.form.updateValueAndValidity();
+  }
+
+  openEditPanel(order: WorkOrderDocument) {
+    this.workOrderForm = order;
+
+    this.form.setValue({
+      name: order.data.name,
+      status: order.data.status,
+      start: this.parseIsoToStruct(order.data.startDate),
+      end: this.parseIsoToStruct(order.data.endDate),
+    });
+
+    this.panelOpen = true;
+  }
+
+  close() {
+    this.form.reset({
+      name: '',
+      status: 'open',
+      start: null,
+      end: null,
+    });
+    this.panelOpen = false;
+  }
+
+  // -------------------------------
+  // SUBMIT
+  // -------------------------------
+
   submit() {
-    // Auto-fill start date if empty
     if (!this.form.value.start) {
-      this.form.patchValue({
-        start: this.toStruct(new Date(this.selectedPlaceholder)),
-      });
+      this.form.patchValue({ start: this.parseIsoToStruct(this.selectedPlaceholder) });
     }
-
     if (!this.form.value.end) {
-      this.form.patchValue({
-        end: this.toStruct(new Date(this.nextWeekPlaceholder)),
-      });
+      this.form.patchValue({ end: this.parseIsoToStruct(this.nextWeekPlaceholder) });
     }
-
 
     this.form.updateValueAndValidity();
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -188,24 +205,19 @@ export class WorkOrderFormPanelComponent implements OnInit {
       }
     };
 
-    if (this.workOrderForm) {
-      this.workOrderService.update(payload);
-    } else {
-      this.workOrderService.create(payload);
-    }
-
-    this.panelOpen = false;
+    if (this.workOrderForm) this.workOrderService.update(payload);
+    else this.workOrderService.create(payload);
+    
+    this.close()
   }
-  
 
+  // -------------------------------
+  // DATEPICKER CONTROLS
+  // -------------------------------
 
-
-
-
-
-  //PANEL CONTROLS
   startOpen = false;
   endOpen = false;
+
   openStart() {
     this.startOpen = !this.startOpen;
     this.endOpen = false;
