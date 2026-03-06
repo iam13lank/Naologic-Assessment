@@ -61,7 +61,6 @@ export class WorkOrderBarComponent {
     if (startIndex === -1 || endIndex === -1) return {};
 
     const cellWidth = this.getCellWidth();
-    console.log(cellWidth)
     return {
       left: `${startIndex * cellWidth}px`,
       width: `${(endIndex - startIndex + 1) * cellWidth}px`,
