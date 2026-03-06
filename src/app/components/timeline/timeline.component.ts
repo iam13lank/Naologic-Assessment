@@ -157,13 +157,27 @@ export class TimelineComponent implements OnChanges {
       }
 
       if (timescale === 'Week') {
-        const weekLabel = `Week ${this.getWeekNumber(current)}`;
+        const startOfWeek = new Date(current);
+        const endOfWeek = new Date(current);
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+
+        const label = `${startOfWeek.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric'
+        })} - ${endOfWeek.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric'
+        })}`;
+
         cells.push({
-          date: new Date(current),
-          label: weekLabel
+          date: new Date(startOfWeek),
+          label
         });
+
         current.setDate(current.getDate() + 7);
       }
+
+
 
       if (timescale === 'Month') {
         cells.push({
@@ -179,16 +193,6 @@ export class TimelineComponent implements OnChanges {
 
     return cells;
   }
-
-  getWeekNumber(date: Date): number {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    const dayNum = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil((((d as any) - (yearStart as any)) / 86400000 + 1) / 7);
-  }
-
-  
 
   getCellWidth() {
     if (this.timescale === 'Day') return 150;
