@@ -114,7 +114,7 @@ export const WORK_ORDERS: WorkOrderDocument[] = [
       name: 'Procter & Gamble Outbound Wave',
       workCenterId: 'wc-2',
       status: 'open',
-      startDate: '2026-03-02',
+      startDate: '2026-03-05',
       endDate: '2026-03-12'
     }
   },
