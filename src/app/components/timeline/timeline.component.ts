@@ -157,8 +157,13 @@ export class TimelineComponent implements OnChanges {
       }
 
       if (timescale === 'Week') {
+        // Snap current to start of week (Sunday)
         const startOfWeek = new Date(current);
-        const endOfWeek = new Date(current);
+        const day = startOfWeek.getDay(); // 0 = Sun
+        startOfWeek.setDate(startOfWeek.getDate() - day);
+
+        // End of week = start + 6
+        const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(endOfWeek.getDate() + 6);
 
         const label = `${startOfWeek.toLocaleDateString('en-US', {
@@ -174,6 +179,8 @@ export class TimelineComponent implements OnChanges {
           label
         });
 
+        // Move to next week (startOfWeek + 7)
+        current.setTime(startOfWeek.getTime());
         current.setDate(current.getDate() + 7);
       }
 
