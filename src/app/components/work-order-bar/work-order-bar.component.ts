@@ -36,9 +36,14 @@ export class WorkOrderBarComponent {
     this.menuOpen = false;
     this.delete.emit(this.order);
   }
+  toLocalDate(dateStr: string): Date {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return new Date(y, m - 1, d); // Local midnight, no timezone shift
+  }
+
   getBarStyle() {
-    const start = new Date(this.order.data.startDate);
-    const end = new Date(this.order.data.endDate);
+    const start = this.toLocalDate(this.order.data.startDate);
+    const end = this.toLocalDate(this.order.data.endDate);
 
     start.setHours(0, 0, 0, 0);
     end.setHours(0, 0, 0, 0);
